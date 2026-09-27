@@ -996,7 +996,7 @@
                 <ol style="padding-left: 20px; display: flex; flex-direction: column; gap: 10px;">
                     <li><strong>Crea un Repositorio:</strong> En GitHub, crea un nuevo repositorio público llamado <code>revista-octubre-2026</code>.</li>
                     <li><strong>Sube el index.html:</strong> Guarda el archivo HTML principal en la raíz del repositorio.</li>
-                    <li><strong>Estructura de Imágenes:</strong> Crea la carpeta <code>assets/flyers/</code> en GitHub y sube allí los afiches con los siguientes nombres:
+                    <li><strong>Estructura de Imágenes:</strong> Crea la carpeta <code>assets/</code> en la raíz de tu repositorio y sube allí los afiches con los siguientes nombres:
                         <ul style="margin-top: 5px; font-size: 12px; font-family: monospace; color: var(--primary-blue);">
                             <li>01-atencion-humanizada.jpg</li>
                             <li>09-archivista.jpg</li>
@@ -1085,10 +1085,8 @@
             }
         }
 
-        // Modal Flyer Handler
+        // Modal Flyer Handler con Búsqueda Automática de Rutas y Extensiones
         function openFlyerModal(day, title, description, flyerFilename, launchConfetti = false) {
-            currentFlyerPath = `assets/flyers/${flyerFilename}`;
-            
             const modalTitle = document.getElementById('modal-title');
             if (modalTitle) modalTitle.innerText = `Día ${day} de Octubre - ${title}`;
 
@@ -1096,28 +1094,57 @@
             if (modalDesc) modalDesc.innerText = description;
 
             const pathText = document.getElementById('flyer-path-text');
-            if (pathText) pathText.innerText = `Ruta asignada: ${currentFlyerPath}`;
-
             const container = document.getElementById('flyer-container');
             if (!container) return;
-            
-            // Try loading image if available, fallback to placeholder
-            const img = new Image();
-            img.src = currentFlyerPath;
-            img.alt = title;
-            img.onload = function() {
-                container.innerHTML = '';
-                container.appendChild(img);
-            };
-            img.onerror = function() {
-                container.innerHTML = `
-                    <div class="flyer-placeholder">
-                        <i class="fa-regular fa-image"></i>
-                        <p style="font-size: 13px; font-weight: 700; margin-top: 8px;">${title}</p>
-                        <p style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Agrega la imagen en: <code>${currentFlyerPath}</code></p>
-                    </div>
-                `;
-            };
+
+            // Lista de rutas probables y extensiones alternativas
+            const possiblePaths = [
+                `assets/${flyerFilename}`,
+                `assets/flyers/${flyerFilename}`,
+                `./${flyerFilename}`,
+                `assets/${flyerFilename.replace('.jpg', '.png')}`,
+                `assets/${flyerFilename.replace('.jpg', '.jpeg')}`,
+                `assets/${flyerFilename.replace('.jpg', '.JPG')}`,
+                `assets/${flyerFilename.replace('.jpg', '.PNG')}`
+            ];
+
+            function tryLoadImage(index) {
+                if (index >= possiblePaths.length) {
+                    currentFlyerPath = `assets/${flyerFilename}`;
+                    if (pathText) pathText.innerText = `Ruta intentada: assets/${flyerFilename}`;
+                    container.innerHTML = `
+                        <div class="flyer-placeholder">
+                            <i class="fa-regular fa-image"></i>
+                            <p style="font-size: 13px; font-weight: 700; margin-top: 8px;">${title}</p>
+                            <p style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Ubicación esperada: <code>assets/${flyerFilename}</code></p>
+                            <p style="font-size: 10.5px; color: #d9534f; margin-top: 6px;">💡 Revisa que la extensión coincida (ej: .jpg vs .JPG vs .png)</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const testPath = possiblePaths[index];
+                const img = new Image();
+                img.src = testPath;
+                img.alt = title;
+                img.style.maxWidth = '100%';
+                img.style.maxHeight = '65vh';
+                img.style.objectFit = 'contain';
+                img.style.borderRadius = '6px';
+                
+                img.onload = function() {
+                    currentFlyerPath = testPath;
+                    if (pathText) pathText.innerText = `Cargado exitosamente desde: ${testPath}`;
+                    container.innerHTML = '';
+                    container.appendChild(img);
+                };
+                
+                img.onerror = function() {
+                    tryLoadImage(index + 1);
+                };
+            }
+
+            tryLoadImage(0);
 
             const flyerModal = document.getElementById('flyer-modal');
             if (flyerModal) flyerModal.classList.add('active');
