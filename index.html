@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Revista Digital Institucional - Octubre 2026</title>
+    
+    <!-- Google Fonts & Fallbacks -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- Font Awesome Icons CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-blue: #0056b3;
+            --dark-blue: #003366;
+            --accent-blue: #007bff;
+            --light-blue: #e6f0fa;
+            --soft-gray: #f8f9fa;
+            --border-gray: #e9ecef;
+            --text-dark: #2c3e50;
+            --text-muted: #6c757d;
+            --gold-accent: #d4af37;
+            --font-family: 'Century Gothic', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --shadow-soft: 0 10px 25px rgba(0, 0, 0, 0.08);
+            --shadow-hard: 0 15px 35px rgba(0, 51, 102, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: #f0f4f8;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            overflow-x: hidden;
+        }
+
+        /* Header Bar */
+        header.app-header {
+            width: 100%;
+            background-color: #ffffff;
+            border-bottom: 2px solid var(--light-blue);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo i {
+            font-size: 24px;
+            color: var(--primary-blue);
+        }
+
+        .brand-logo h1 {
+            font-size: 18px;
+            color: var(--dark-blue);
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-header {
+            background-color: var(--light-blue);
+            color: var(--primary-blue);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-family: var(--font-family);
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-header:hover {
+            background-color: var(--primary-blue);
+            color: #ffffff;
+        }
+
+        /* Magazine Container & Book Effect */
+        .magazine-viewport {
+            width: 100%;
+            max-width: 1000px;
+            margin: 20px auto;
+            padding: 0 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .book-container {
+            width: 100%;
+            height: 650px;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: var(--shadow-hard);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            border: 1px solid var(--border-gray);
+        }
+
+        .page {
+            width: 100%;
+            height: 100%;
+            padding: 40px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: transform 0.6s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.4s ease;
+            overflow-y: auto;
+            background: #ffffff;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .page.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 2;
+        }
+
+        .page.next-enter {
+            transform: translateX(100%);
+        }
+
+        .page.prev-enter {
+            transform: translateX(-100%);
+        }
+
+        /* Page Elements */
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--light-blue);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+        }
+
+        .page-title {
+            color: var(--dark-blue);
+            font-size: 22px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .page-number {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: var(--soft-gray);
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .page-body {
+            flex-grow: 1;
+        }
+
+        /* Navigation Bar Controls */
+        .navigation-bar {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+            background: #ffffff;
+            padding: 10px 24px;
+            border-radius: 30px;
+            box-shadow: var(--shadow-soft);
+        }
+
+        .nav-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--dark-blue);
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .page-indicator {
+            font-weight: 700;
+            color: var(--dark-blue);
+            font-size: 14px;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        /* Cover Page Styling */
+        .page-cover {
+            background: linear-gradient(135deg, #ffffff 0%, var(--light-blue) 100%);
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            gap: 24px;
+            position: relative;
+        }
+
+        .cover-badge {
+            background: var(--dark-blue);
+            color: white;
+            padding: 6px 20px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .cover-title {
+            font-size: 38px;
+            color: var(--dark-blue);
+            font-weight: 800;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .cover-subtitle {
+            font-size: 16px;
+            color: var(--primary-blue);
+            max-width: 600px;
+            line-height: 1.5;
+        }
+
+        .cover-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-soft);
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid var(--border-gray);
+        }
+
+        /* Editorial Page Styling */
+        .editorial-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .editorial-text p {
+            line-height: 1.7;
+            margin-bottom: 16px;
+            color: #4a5568;
+            font-size: 14.5px;
+        }
+
+        .highlight-box {
+            background-color: var(--light-blue);
+            border-left: 4px solid var(--primary-blue);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+            font-style: italic;
+            color: var(--dark-blue);
+        }
+
+        /* Calendar Styling */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .day-header {
+            text-align: center;
+            font-weight: 700;
+            color: var(--primary-blue);
+            font-size: 12px;
+            padding: 8px 0;
+            background: var(--light-blue);
+            border-radius: 6px;
+            text-transform: uppercase;
+        }
+
+        .day-cell {
+            background: var(--soft-gray);
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            min-height: 68px;
+            padding: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .day-cell.empty {
+            background: transparent;
+            border: none;
+        }
+
+        .day-number {
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .day-cell.has-event {
+            background: #ffffff;
+            border: 2px solid var(--accent-blue);
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 123, 255, 0.12);
+        }
+
+        .day-cell.has-event:hover {
+            transform: translateY(-3px);
+            border-color: var(--dark-blue);
+            box-shadow: 0 6px 15px rgba(0, 51, 102, 0.2);
+        }
+
+        .day-cell.birthday-event {
+            border-color: #e83e8c;
+            background: #fff0f6;
+        }
+
+        .day-badge {
+            font-size: 9px;
+            font-weight: 700;
+            padding: 3px 4px;
+            border-radius: 4px;
+            background: var(--primary-blue);
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+            margin-top: 2px;
+            text-align: center;
+        }
+
+        .birthday-event .day-badge {
+            background: #e83e8c;
+        }
+
+        /* Honorees & Birthday Section */
+        .honorees-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .honoree-card {
+            background: #ffffff;
+            border: 1px solid var(--border-gray);
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: var(--shadow-soft);
+            cursor: pointer;
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .honoree-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-blue);
+        }
+
+        .honoree-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--light-blue);
+            color: var(--primary-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .honoree-info h4 {
+            font-size: 13.5px;
+            color: var(--dark-blue);
+            margin-bottom: 2px;
+        }
+
+        .honoree-info p {
+            font-size: 11.5px;
+            color: var(--text-muted);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .gallery-item {
+            background: var(--soft-gray);
+            border: 1px solid var(--border-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.03);
+        }
+
+        .gallery-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background-color: var(--light-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-blue);
+        }
+
+        .gallery-caption {
+            padding: 8px 10px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--dark-blue);
+            text-align: center;
+            background: white;
+        }
+
+        /* Modal Viewer for Flyers */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 26, 51, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 650px;
+            max-height: 90vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            padding: 16px 20px;
+            background: var(--dark-blue);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+            text-align: center;
+        }
+
+        .flyer-image-container {
+            width: 100%;
+            min-height: 300px;
+            background-color: var(--light-blue);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+            border: 2px dashed var(--accent-blue);
+            overflow: hidden;
+        }
+
+        .flyer-image-container img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .flyer-placeholder {
+            padding: 30px;
+            color: var(--primary-blue);
+        }
+
+        .flyer-placeholder i {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        .modal-footer {
+            padding: 12px 20px;
+            background: var(--soft-gray);
+            border-top: 1px solid var(--border-gray);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .btn-modal {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-family: var(--font-family);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-modal-primary {
+            background: var(--primary-blue);
+            color: white;
+        }
+
+        /* Footer Container */
+        footer.app-footer {
+            margin: 15px 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            text-align: center;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            .book-container {
+                height: 580px;
+            }
+            .page {
+                padding: 20px;
+            }
+            .cover-title {
+                font-size: 26px;
+            }
+            .editorial-content {
+                grid-template-columns: 1fr;
+            }
+            .calendar-grid {
+                gap: 4px;
+            }
+            .day-cell {
+                min-height: 54px;
+                padding: 4px;
+            }
+            .day-number {
+                font-size: 11px;
+            }
+            .day-badge {
+                font-size: 7.5px;
+            }
+            .honorees-grid {
+                grid-template-columns: 1fr;
+            }
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="app-header">
+        <div class="brand-logo">
+            <i class="fa-solid fa-book-open-reader"></i>
+            <h1>Revista Digital Institucional</h1>
+        </div>
+        <div class="header-controls">
+            <button class="btn-header" onclick="goToPage(2)"><i class="fa-regular fa-calendar-days"></i> Ir al Calendario</button>
+            <button class="btn-header" onclick="triggerConfetti()"><i class="fa-solid fa-wand-magic-sparkles"></i> Celebrar</button>
+            <button class="btn-header" style="background: #24292e; color: #fff;" onclick="openGitHubModal()"><i class="fa-brands fa-github"></i> Guía GitHub Pages</button>
+        </div>
+    </header>
+
+    <main class="magazine-viewport">
+        <div class="book-container" id="book">
+
+            <!-- PÁGINA 1: PORTADA -->
+            <article class="page page-cover active" id="page-1">
+                <span class="cover-badge">Edición Octubre 2026</span>
+                <h2 class="cover-title">Fechas Especiales & Conmemoraciones</h2>
+                <p class="cover-subtitle">
+                    Un espacio dedicado a reconocer el compromiso, la vocación de nuestro talento humano y la integración con nuestra comunidad.
+                </p>
+                
+                <div class="cover-card">
+                    <i class="fa-solid fa-heart-pulse" style="font-size: 32px; color: var(--primary-blue); margin-bottom: 8px;"></i>
+                    <h3 style="color: var(--dark-blue); font-size: 16px; margin-bottom: 4px;">Atención Humanizada y Bienestar</h3>
+                    <p style="font-size: 12.5px; color: var(--text-muted);">Descubre las actividades, reconocimientos y fechas clave preparadas para este mes.</p>
+                </div>
+
+                <div style="font-size: 12px; color: var(--text-muted); margin-top: 10px;">
+                    <i class="fa-solid fa-arrow-right-long" style="margin-right: 5px; color: var(--accent-blue);"></i> Usa las flechas o teclado para hojear la revista
+                </div>
+            </article>
+
+            <!-- PÁGINA 2: MENSAJE EDITORIAL -->
+            <article class="page" id="page-2">
+                <div class="page-header">
+                    <h2 class="page-title">Editorial del Mes</h2>
+                    <span class="page-number">Página 02</span>
+                </div>
+                <div class="page-body">
+                    <div class="editorial-content">
+                        <div class="editorial-text">
+                            <h3 style="color: var(--primary-blue); font-size: 18px; margin-bottom: 12px;">Compromiso y Humanización en Octubre</h3>
+                            <p>Estimada comunidad institucional, nos complace presentar la edición mensual de nuestra Revista Digital, un canal diseñado para mantenernos conectados e informados sobre los momentos más significativos de nuestra organización.</p>
+                            
+                            <div class="highlight-box">
+                                "La excelencia en el servicio no es un acto aislado, sino el resultado del esfuerzo diario y empático de todo nuestro equipo humano."
+                            </div>
+
+                            <p>Durante este mes de Octubre 2026, destacamos hitos fundamentales como la Atención Humanizada en Salud, la Salud Mental y el reconocimiento especial a perfiles esenciales en nuestra gestión clínica e institucional.</p>
+                        </div>
+
+                        <div style="background: var(--light-blue); padding: 20px; border-radius: 12px; text-align: center;">
+                            <i class="fa-solid fa-award" style="font-size: 40px; color: var(--primary-blue); margin-bottom: 10px;"></i>
+                            <h4 style="color: var(--dark-blue); font-size: 14px; margin-bottom: 6px;">Nuestra Promesa</h4>
+                            <p style="font-size: 12px; color: var(--text-dark); line-height: 1.4;">Fomentar un entorno laboral cálido, profesional e incluyente para todos los colaboradores y usuarios.</p>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PÁGINA 3: CALENDARIO OCTUBRE 2026 INTERACTIVO -->
+            <article class="page" id="page-3">
+                <div class="page-header">
+                    <h2 class="page-title">Calendario Octubre 2026</h2>
+                    <span class="page-number">Página 03</span>
+                </div>
+                <div class="page-body">
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 8px;">
+                        <i class="fa-solid fa-circle-info" style="color: var(--accent-blue);"></i> Haz clic sobre un día resaltado para desplegar el <strong>Flyer oficial</strong> y celebrar la fecha.
+                    </p>
+
+                    <div class="calendar-grid">
+                        <!-- Cabeceras Días -->
+                        <div class="day-header">Lun</div>
+                        <div class="day-header">Mar</div>
+                        <div class="day-header">Mié</div>
+                        <div class="day-header">Jue</div>
+                        <div class="day-header">Vie</div>
+                        <div class="day-header">Sáb</div>
+                        <div class="day-header">Dom</div>
+
+                        <!-- Fila 1 (Oct 1 Jueves) -->
+                        <div class="day-cell empty"></div>
+                        <div class="day-cell empty"></div>
+                        <div class="day-cell empty"></div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('01', 'Día de la Atención Humanizada en Salud', 'Clientes Externos presentes en la institución.', '01-atencion-humanizada.jpg')">
+                            <span class="day-number">01</span>
+                            <span class="day-badge">Atención Hum.</span>
+                        </div>
+                        <div class="day-cell"><span class="day-number">02</span></div>
+                        <div class="day-cell"><span class="day-number">03</span></div>
+                        <div class="day-cell"><span class="day-number">04</span></div>
+
+                        <!-- Fila 2 -->
+                        <div class="day-cell"><span class="day-number">05</span></div>
+                        <div class="day-cell"><span class="day-number">06</span></div>
+                        <div class="day-cell"><span class="day-number">07</span></div>
+                        <div class="day-cell"><span class="day-number">08</span></div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('09', 'Día Mundial del Archivista', 'Homenaje especial a Paola Andrea Pino Cuéllar.', '09-archivista.jpg')">
+                            <span class="day-number">09</span>
+                            <span class="day-badge">Archivista</span>
+                        </div>
+                        <div class="day-cell"><span class="day-number">10</span></div>
+                        <div class="day-cell"><span class="day-number">11</span></div>
+
+                        <!-- Fila 3 -->
+                        <div class="day-cell has-event" onclick="openFlyerModal('12', 'Día Mundial de la Salud Mental', '72 Clientes Internos y Clientes Externos.', '12-salud-mental.jpg')">
+                            <span class="day-number">12</span>
+                            <span class="day-badge">Salud Mental</span>
+                        </div>
+                        <div class="day-cell"><span class="day-number">13</span></div>
+                        <div class="day-cell"><span class="day-number">14</span></div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('15', 'Día Mundial del Lavado de Manos', 'Jornada de autocuidado y prevención.', '15-lavado-manos.jpg')">
+                            <span class="day-number">15</span>
+                            <span class="day-badge">Lavado Manos</span>
+                        </div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('16', 'Día del Anestesiólogo & Directivo', 'Reconocimiento a Marlon Romero, Ariel Amaya y Luis Felipe Calderón.', '16-anestesiologo-directivo.jpg')">
+                            <span class="day-number">16</span>
+                            <span class="day-badge">Anest. / Direct.</span>
+                        </div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('17', 'Auxiliar de Servicio Farmacéutico', 'Homenaje a Angélica María Ñustes Posas.', '17-servicio-farmaceutico.jpg')">
+                            <span class="day-number">17</span>
+                            <span class="day-badge">Aux. Farmacia</span>
+                        </div>
+                        <div class="day-cell"><span class="day-number">18</span></div>
+
+                        <!-- Fila 4 -->
+                        <div class="day-cell"><span class="day-number">19</span></div>
+                        <div class="day-cell"><span class="day-number">20</span></div>
+                        <div class="day-cell"><span class="day-number">21</span></div>
+                        <div class="day-cell"><span class="day-number">22</span></div>
+                        <div class="day-cell"><span class="day-number">23</span></div>
+                        <div class="day-cell"><span class="day-number">24</span></div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('25', 'Día del Instrumentador Quirúrgico', 'Reconocimiento a Rosa Linda Ospino Luna.', '25-instrumentador-quirurgico.jpg')">
+                            <span class="day-number">25</span>
+                            <span class="day-badge">Instr. Quirúrgico</span>
+                        </div>
+
+                        <!-- Fila 5 -->
+                        <div class="day-cell"><span class="day-number">26</span></div>
+                        <div class="day-cell has-event birthday-event" onclick="openFlyerModal('27', 'Educación Continuada & Cumpleaños', 'Jornada con 72 personas y celebración especial de cumpleañeros.', '27-educacion-cumpleanos.jpg', true)">
+                            <span class="day-number">27</span>
+                            <span class="day-badge">Educ. / Cumple</span>
+                        </div>
+                        <div class="day-cell"><span class="day-number">28</span></div>
+                        <div class="day-cell"><span class="day-number">29</span></div>
+                        <div class="day-cell"><span class="day-number">30</span></div>
+                        <div class="day-cell has-event" onclick="openFlyerModal('31', 'Día de los Niños', 'Celebración dedicada a los 37 hijos/as de clientes internos.', '31-dia-de-los-ninos.jpg', true)">
+                            <span class="day-number">31</span>
+                            <span class="day-badge">Día de Niños</span>
+                        </div>
+                        <div class="day-cell empty"></div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PÁGINA 4: RECONOCIMIENTOS & CUMPLEAÑEROS -->
+            <article class="page" id="page-4">
+                <div class="page-header">
+                    <h2 class="page-title">Homenajeados & Cumpleaños</h2>
+                    <span class="page-number">Página 04</span>
+                </div>
+                <div class="page-body">
+                    <h3 style="color: var(--primary-blue); font-size: 15px; margin-bottom: 12px;"><i class="fa-solid fa-star"></i> Reconocimientos Especiales por Nombre</h3>
+                    
+                    <div class="honorees-grid" style="margin-bottom: 20px;">
+                        <div class="honoree-card" onclick="openFlyerModal('09', 'Homenaje a Archivista', 'Paola Andrea Pino Cuéllar', '09-archivista.jpg')">
+                            <div class="honoree-avatar">P</div>
+                            <div class="honoree-info">
+                                <h4>Paola Andrea Pino Cuéllar</h4>
+                                <p>Día del Archivista (09 Oct)</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" onclick="openFlyerModal('16', 'Homenaje a Anestesiólogos', 'Marlon Francisco Romero Bohórquez y Ariel Amaya Torres', '16-anestesiologo-directivo.jpg')">
+                            <div class="honoree-avatar">M</div>
+                            <div class="honoree-info">
+                                <h4>Marlon Romero & Ariel Amaya</h4>
+                                <p>Día del Anestesiólogo (16 Oct)</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" onclick="openFlyerModal('16', 'Homenaje a Directivo', 'Luis Felipe Calderón Estrada', '16-anestesiologo-directivo.jpg')">
+                            <div class="honoree-avatar">L</div>
+                            <div class="honoree-info">
+                                <h4>Luis Felipe Calderón Estrada</h4>
+                                <p>Día del Directivo (16 Oct)</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" onclick="openFlyerModal('17', 'Aux. Servicio Farmacéutico', 'Angélica María Ñustes Posas', '17-servicio-farmaceutico.jpg')">
+                            <div class="honoree-avatar">A</div>
+                            <div class="honoree-info">
+                                <h4>Angélica María Ñustes Posas</h4>
+                                <p>Servicio Farmacéutico (17 Oct)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 style="color: #e83e8c; font-size: 15px; margin-bottom: 12px;"><i class="fa-solid fa-cake-candles"></i> Cumpleañeros del Mes (27 Octubre)</h3>
+                    
+                    <div class="honorees-grid">
+                        <div class="honoree-card" style="border-left: 3px solid #e83e8c;" onclick="triggerConfetti()">
+                            <div class="honoree-avatar" style="background: #fff0f6; color: #e83e8c;">🎂</div>
+                            <div class="honoree-info">
+                                <h4>Karen Mildred Celis Guerrero</h4>
+                                <p>Celebración de Cumpleaños</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" style="border-left: 3px solid #e83e8c;" onclick="triggerConfetti()">
+                            <div class="honoree-avatar" style="background: #fff0f6; color: #e83e8c;">🎂</div>
+                            <div class="honoree-info">
+                                <h4>Sergio Eduardo Ospina Hernández</h4>
+                                <p>Celebración de Cumpleaños</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" style="border-left: 3px solid #e83e8c;" onclick="triggerConfetti()">
+                            <div class="honoree-avatar" style="background: #fff0f6; color: #e83e8c;">🎂</div>
+                            <div class="honoree-info">
+                                <h4>Rafael Alfonso Orta Pérez</h4>
+                                <p>Celebración de Cumpleaños</p>
+                            </div>
+                        </div>
+
+                        <div class="honoree-card" style="border-left: 3px solid #e83e8c;" onclick="triggerConfetti()">
+                            <div class="honoree-avatar" style="background: #fff0f6; color: #e83e8c;">🎂</div>
+                            <div class="honoree-info">
+                                <h4>Carlos Alfonso Delgado Nieto</h4>
+                                <p>Celebración de Cumpleaños</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PÁGINA 5: GALERÍA DE FLYERS -->
+            <article class="page" id="page-5">
+                <div class="page-header">
+                    <h2 class="page-title">Galería de Afiches & Flyers</h2>
+                    <span class="page-number">Página 05</span>
+                </div>
+                <div class="page-body">
+                    <p style="font-size: 12.5px; color: var(--text-muted); margin-bottom: 16px;">
+                        Explora la colección visual de comunicados preparados para la difusión en pantallas e impresos.
+                    </p>
+
+                    <div class="gallery-grid">
+                        <div class="gallery-item" onclick="openFlyerModal('01', 'Atención Humanizada', 'Flyer Institucional', '01-atencion-humanizada.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">01 Oct - Atención Hum.</div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openFlyerModal('09', 'Día del Archivista', 'Flyer Institucional', '09-archivista.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">09 Oct - Archivista</div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openFlyerModal('12', 'Salud Mental', 'Flyer Institucional', '12-salud-mental.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">12 Oct - Salud Mental</div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openFlyerModal('16', 'Anestesiólogo & Directivo', 'Flyer Institucional', '16-anestesiologo-directivo.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">16 Oct - Especialidades</div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openFlyerModal('27', 'Educación Continuada', 'Flyer Institucional', '27-educacion-cumpleanos.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">27 Oct - Educación</div>
+                        </div>
+
+                        <div class="gallery-item" onclick="openFlyerModal('31', 'Día de los Niños', 'Flyer Institucional', '31-dia-de-los-ninos.jpg')">
+                            <div class="gallery-thumb"><i class="fa-regular fa-image fa-2x"></i></div>
+                            <div class="gallery-caption">31 Oct - Día de Niños</div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- PÁGINA 6: CONTRAPORTADA / CONTACTO -->
+            <article class="page" id="page-6" style="text-align: center; justify-content: center;">
+                <div style="max-width: 500px; margin: 0 auto;">
+                    <i class="fa-solid fa-building-user" style="font-size: 48px; color: var(--primary-blue); margin-bottom: 16px;"></i>
+                    <h2 style="color: var(--dark-blue); font-size: 24px; margin-bottom: 8px;">¡Gracias por ser parte de nuestra comunidad!</h2>
+                    <p style="font-size: 14px; color: var(--text-muted); line-height: 1.6; margin-bottom: 24px;">
+                        Esta revista es una iniciativa para fortalecer nuestros lazos, destacar tus logros y mantenernos unidos en cada celebración.
+                    </p>
+
+                    <div style="background: var(--light-blue); padding: 16px; border-radius: 10px; font-size: 13px; color: var(--dark-blue);">
+                        <p style="font-weight: 700; margin-bottom: 4px;">Área de Gestión Humana & Bienestar</p>
+                        <p style="margin-bottom: 0;">Para sugerencias o publicaciones contacta a comunicación interna.</p>
+                    </div>
+                </div>
+            </article>
+
+        </div>
+
+        <!-- Controls Nav Bar -->
+        <nav class="navigation-bar">
+            <button class="nav-btn" id="prev-btn" onclick="prevPage()"><i class="fa-solid fa-chevron-left"></i></button>
+            <span class="page-indicator" id="page-indicator">Página 1 de 6</span>
+            <button class="nav-btn" id="next-btn" onclick="nextPage()"><i class="fa-solid fa-chevron-right"></i></button>
+        </nav>
+    </main>
+
+    <div class="modal-overlay" id="flyer-modal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modal-title">Detalle del Evento</h3>
+                <button class="modal-close" onclick="closeModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="flyer-image-container" id="flyer-container">
+                    <div class="flyer-placeholder">
+                        <i class="fa-regular fa-image"></i>
+                    </div>
+                </div>
+                <p id="flyer-path-text" style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-family: monospace; word-break: break-all;"></p>
+                <p id="modal-description" style="font-size: 14px; color: var(--text-dark); line-height: 1.5;"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal" onclick="closeModal()">Cerrar</button>
+                <button class="btn-modal btn-modal-primary" onclick="alert('Ruta de imagen para subir a GitHub: ' + currentFlyerPath)"><i class="fa-solid fa-download"></i> Ver Ruta Imagen</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL DE GUÍA PARA GITHUB PAGES -->
+    <div class="modal-overlay" id="github-modal" onclick="closeModalOnOverlay(event)">
+        <div class="modal-container" style="max-width: 600px;">
+            <div class="modal-header" style="background: #24292e;">
+                <h3><i class="fa-brands fa-github"></i> Publicar Gratis en GitHub Pages</h3>
+                <button class="modal-close" onclick="closeGitHubModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" style="text-align: left; font-size: 13.5px; line-height: 1.6;">
+                <ol style="padding-left: 20px; display: flex; flex-direction: column; gap: 10px;">
+                    <li><strong>Crea un Repositorio:</strong> En GitHub, crea un nuevo repositorio público llamado <code>revista-octubre-2026</code>.</li>
+                    <li><strong>Sube el index.html:</strong> Guarda el archivo HTML principal en la raíz del repositorio.</li>
+                    <li><strong>Estructura de Imágenes:</strong> Crea la carpeta <code>assets/flyers/</code> en GitHub y sube allí los afiches con los siguientes nombres:
+                        <ul style="margin-top: 5px; font-size: 12px; font-family: monospace; color: var(--primary-blue);">
+                            <li>01-atencion-humanizada.jpg</li>
+                            <li>09-archivista.jpg</li>
+                            <li>12-salud-mental.jpg</li>
+                            <li>15-lavado-manos.jpg</li>
+                            <li>16-anestesiologo-directivo.jpg</li>
+                            <li>17-servicio-farmaceutico.jpg</li>
+                            <li>25-instrumentador-quirurgico.jpg</li>
+                            <li>27-educacion-cumpleanos.jpg</li>
+                            <li>31-dia-de-los-ninos.jpg</li>
+                        </ul>
+                    </li>
+                    <li><strong>Activa Pages:</strong> Ve a <em>Settings > Pages</em>, selecciona la rama <code>main</code> y haz clic en <strong>Save</strong>. ¡Tu enlace quedará activo en un par de minutos!</li>
+                </ol>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modal btn-modal-primary" onclick="closeGitHubModal()">Entendido</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+        Revista Digital Institucional © Octubre 2026 | Desarrollado para GitHub Pages
+    </footer>
+
+    <script>
+        // State variables
+        let currentPage = 1;
+        const totalPages = 6;
+        let currentFlyerPath = '';
+
+        // Page Navigation Logic
+        function updatePageVisibility() {
+            for (let i = 1; i <= totalPages; i++) {
+                const page = document.getElementById(`page-${i}`);
+                if (i === currentPage) {
+                    page.classList.add('active');
+                } else {
+                    page.classList.remove('active');
+                }
+            }
+
+            // Update page indicator and buttons state
+            document.getElementById('page-indicator').innerText = `Página ${currentPage} de ${totalPages}`;
+            document.getElementById('prev-btn').disabled = (currentPage === 1);
+            document.getElementById('next-btn').disabled = (currentPage === totalPages);
+        }
+
+        function nextPage() {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePageVisibility();
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePageVisibility();
+            }
+        }
+
+        function goToPage(pageNum) {
+            if (pageNum >= 1 && pageNum <= totalPages) {
+                currentPage = pageNum;
+                updatePageVisibility();
+            }
+        }
+
+        // Keyboard navigation listeners
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextPage();
+            if (e.key === 'ArrowLeft') prevPage();
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Confetti Effect Function
+        function triggerConfetti() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        }
+
+        // Modal Flyer Handler
+        function openFlyerModal(day, title, description, flyerFilename, launchConfetti = false) {
+            currentFlyerPath = `assets/flyers/${flyerFilename}`;
+            
+            const modalTitle = document.getElementById('modal-title');
+            if (modalTitle) modalTitle.innerText = `Día ${day} de Octubre - ${title}`;
+
+            const modalDesc = document.getElementById('modal-description');
+            if (modalDesc) modalDesc.innerText = description;
+
+            const pathText = document.getElementById('flyer-path-text');
+            if (pathText) pathText.innerText = `Ruta asignada: ${currentFlyerPath}`;
+
+            const container = document.getElementById('flyer-container');
+            if (!container) return;
+            
+            // Try loading image if available, fallback to placeholder
+            const img = new Image();
+            img.src = currentFlyerPath;
+            img.alt = title;
+            img.onload = function() {
+                container.innerHTML = '';
+                container.appendChild(img);
+            };
+            img.onerror = function() {
+                container.innerHTML = `
+                    <div class="flyer-placeholder">
+                        <i class="fa-regular fa-image"></i>
+                        <p style="font-size: 13px; font-weight: 700; margin-top: 8px;">${title}</p>
+                        <p style="font-size: 11px; opacity: 0.8; margin-top: 4px;">Agrega la imagen en: <code>${currentFlyerPath}</code></p>
+                    </div>
+                `;
+            };
+
+            const flyerModal = document.getElementById('flyer-modal');
+            if (flyerModal) flyerModal.classList.add('active');
+
+            if (launchConfetti) {
+                triggerConfetti();
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('flyer-modal').classList.remove('active');
+        }
+
+        function closeModalOnOverlay(event) {
+            if (event.target.id === 'flyer-modal') {
+                closeModal();
+            }
+            if (event.target.id === 'github-modal') {
+                closeGitHubModal();
+            }
+        }
+
+        // GitHub Modal Handlers
+        function openGitHubModal() {
+            document.getElementById('github-modal').classList.add('active');
+        }
+
+        function closeGitHubModal() {
+            document.getElementById('github-modal').classList.remove('active');
+        }
+
+        // Touch Swipe Navigation for Mobile
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const bookElement = document.getElementById('book');
+
+        bookElement.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, false);
+
+        bookElement.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, false);
+
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) nextPage();
+            if (touchEndX > touchStartX + 50) prevPage();
+        }
+
+        // Initialize visibility on load
+        window.onload = function() {
+            updatePageVisibility();
+        };
+    </script>
+</body>
+</html>
