@@ -1888,6 +1888,35 @@ const revista = {
 
     nombreMesMayusculas: "OCTUBRE",
 
+
+    /*
+       ========================================================
+       📁 CARPETA DEL MES
+       ========================================================
+
+       El sistema utilizará automáticamente:
+
+       assets/octubre/
+
+       y dentro:
+
+       assets/octubre/flyers/conmemoraciones/
+       assets/octubre/flyers/reconocimientos/
+       assets/octubre/flyers/cumpleaños/
+       assets/octubre/flyers/actividades/
+
+       Para noviembre solo cambia:
+
+       nombreMes: "Noviembre"
+
+       y automáticamente utilizará:
+
+       assets/noviembre/
+    */
+
+    carpetaMes: "octubre",
+
+
     portada: {
 
         titulo:
@@ -1943,28 +1972,40 @@ const revista = {
    2. 📅 EVENTOS DEL MES
 ============================================================
 
-   TIPOS:
+   TIPOS DISPONIBLES:
 
    "conmemoracion"
+   → assets/mes/flyers/conmemoraciones/
+
    "reconocimiento"
+   → assets/mes/flyers/reconocimientos/
+
    "cumpleanos"
+   → assets/mes/flyers/cumpleaños/
+
    "educacion"
+   → assets/mes/flyers/actividades/
+
    "celebracion"
+   → assets/mes/flyers/actividades/
+
    "actividad"
+   → assets/mes/flyers/actividades/
+
    "campana"
+   → assets/mes/flyers/actividades/
 
    ------------------------------------------------------------
 
    IMPORTANTE:
 
-   Ya NO necesitas escribir:
+   Ya NO necesitas escribir ninguna ruta.
 
-   assets/octubre/flyers/...
+   Solo escribes:
 
-   Solo escribes el nombre del archivo.
-
-   El sistema determina automáticamente
-   la carpeta según el tipo de evento.
+   flyers: [
+       "nombre-del-flyer"
+   ]
 
 ============================================================ */
 
@@ -2405,22 +2446,22 @@ const primerDia =
 ============================================================ */
 
 /*
-   Convierte:
+   La carpeta del mes se toma directamente
+   de revista.carpetaMes.
 
-   Octubre
-   ↓
-   octubre
+   Octubre:
+   assets/octubre/
 
-   Noviembre
-   ↓
-   noviembre
+   Noviembre:
+   assets/noviembre/
 
-   Diciembre
-   ↓
-   diciembre
+   Diciembre:
+   assets/diciembre/
 */
 
 const carpetaMes =
+    revista.carpetaMes
+    ||
     revista.nombreMes
         .toLowerCase()
         .normalize("NFD")
@@ -2428,24 +2469,10 @@ const carpetaMes =
         .trim();
 
 
-/*
-   Carpetas utilizadas dentro de flyers:
 
-   conmemoracion
-   → conmemoraciones
-
-   reconocimiento
-   → reconocimientos
-
-   cumpleanos
-   → cumpleaños
-
-   educacion
-   celebracion
-   actividad
-   campana
-   → actividades
-*/
+/* ============================================================
+   5. CARPETAS SEGÚN TIPO DE EVENTO
+============================================================ */
 
 function obtenerCarpetaTipo(tipo) {
 
@@ -2476,7 +2503,8 @@ function obtenerCarpetaTipo(tipo) {
 
 
     return (
-        carpetas[tipo] ||
+        carpetas[tipo]
+        ||
         "actividades"
     );
 
@@ -2485,7 +2513,7 @@ function obtenerCarpetaTipo(tipo) {
 
 
 /* ============================================================
-   5. CONSTRUIR RUTA DEL FLYER
+   6. CONSTRUIR RUTA DEL FLYER
 ============================================================ */
 
 function construirRutaFlyer(
@@ -2498,20 +2526,16 @@ function construirRutaFlyer(
 
 
     /*
-       Si ya escribiste la extensión,
-       la conserva.
+       Estructura final:
+
+       assets/
+       └── octubre/
+           └── flyers/
+               ├── conmemoraciones/
+               ├── reconocimientos/
+               ├── cumpleaños/
+               └── actividades/
     */
-
-    if (
-        /\.(png|jpg|jpeg|webp)$/i.test(nombre)
-    ) {
-
-        return (
-            `assets/${carpetaMes}/flyers/` +
-            `${carpeta}/${nombre}`
-        );
-
-    }
 
 
     return (
@@ -2524,7 +2548,7 @@ function construirRutaFlyer(
 
 
 /* ============================================================
-   6. CONFIGURAR TEXTOS
+   7. CONFIGURAR TEXTOS
 ============================================================ */
 
 function configurarRevista() {
@@ -2636,7 +2660,7 @@ function configurarRevista() {
 
 
 /* ============================================================
-   7. EXTENSIONES DE IMAGEN
+   8. EXTENSIONES DE IMAGEN
 ============================================================ */
 
 const extensionesImagen = [
@@ -2651,7 +2675,7 @@ const extensionesImagen = [
 
 
 /* ============================================================
-   8. CARGAR IMAGEN
+   9. CARGAR IMAGEN
 ============================================================ */
 
 function cargarImagenConExtension(
@@ -2663,6 +2687,58 @@ function cargarImagenConExtension(
     callback
 
 ) {
+
+    /*
+       Si el nombre ya tiene extensión,
+       usamos directamente ese archivo.
+
+       Si no tiene extensión,
+       probamos:
+
+       .png
+       .jpg
+       .jpeg
+       .webp
+    */
+
+
+    if (
+        /\.(png|jpg|jpeg|webp)$/i.test(nombre)
+    ) {
+
+        const ruta =
+            construirRutaFlyer(
+                nombre,
+                tipo
+            );
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            callback(ruta);
+
+        };
+
+
+        img.onerror = () => {
+
+            callback(null);
+
+        };
+
+
+        img.src =
+            ruta;
+
+
+        return;
+
+    }
+
 
     let indice = 0;
 
@@ -2681,31 +2757,12 @@ function cargarImagenConExtension(
         }
 
 
-        let archivo =
-            nombre;
+        const archivo =
+            nombre +
+            extensionesImagen[indice];
 
 
-        /*
-           Si el usuario ya escribió extensión,
-           no agregamos otra.
-        */
-
-        if (
-            /\.(png|jpg|jpeg|webp)$/i.test(nombre)
-        ) {
-
-            archivo =
-                nombre;
-
-        }
-
-        else {
-
-            archivo =
-                nombre +
-                extensionesImagen[indice];
-
-        }
+        indice++;
 
 
         const ruta =
@@ -2728,8 +2785,6 @@ function cargarImagenConExtension(
 
         img.onerror = () => {
 
-            indice++;
-
             probarSiguiente();
 
         };
@@ -2748,7 +2803,7 @@ function cargarImagenConExtension(
 
 
 /* ============================================================
-   9. GENERAR CALENDARIO
+   10. GENERAR CALENDARIO
 ============================================================ */
 
 function generarCalendario() {
@@ -2988,7 +3043,7 @@ function generarCalendario() {
 
 
 /* ============================================================
-   10. ABRIR EVENTOS DE UN DÍA
+   11. ABRIR EVENTOS DE UN DÍA
 ============================================================ */
 
 function abrirEventosDelDia(
@@ -3061,7 +3116,7 @@ function abrirEventosDelDia(
 
 
 /* ============================================================
-   11. GENERAR HOMENAJEADOS
+   12. GENERAR HOMENAJEADOS
 ============================================================ */
 
 function generarHomenajeados() {
@@ -3196,7 +3251,7 @@ function generarHomenajeados() {
 
 
 /* ============================================================
-   12. GENERAR CUMPLEAÑOS
+   13. GENERAR CUMPLEAÑOS
 ============================================================ */
 
 function generarCumpleanos() {
@@ -3340,7 +3395,7 @@ function generarCumpleanos() {
 
 
 /* ============================================================
-   13. GENERAR GALERÍA
+   14. GENERAR GALERÍA
 ============================================================ */
 
 function generarGaleria() {
@@ -3551,7 +3606,7 @@ function generarGaleria() {
 
 
 /* ============================================================
-   14. MODAL DE FLYERS
+   15. MODAL DE FLYERS
 ============================================================ */
 
 let currentFlyers = [];
@@ -3611,7 +3666,7 @@ function openFlyerModal(
 
 
 /* ============================================================
-   15. MOSTRAR FLYER ACTUAL
+   16. MOSTRAR FLYER ACTUAL
 ============================================================ */
 
 function showCurrentFlyer() {
@@ -3762,7 +3817,7 @@ function showCurrentFlyer() {
 
 
 /* ============================================================
-   16. SIGUIENTE FLYER
+   17. SIGUIENTE FLYER
 ============================================================ */
 
 function nextFlyer() {
@@ -3783,7 +3838,7 @@ function nextFlyer() {
 
 
 /* ============================================================
-   17. FLYER ANTERIOR
+   18. FLYER ANTERIOR
 ============================================================ */
 
 function previousFlyer() {
@@ -3803,7 +3858,7 @@ function previousFlyer() {
 
 
 /* ============================================================
-   18. CERRAR MODAL
+   19. CERRAR MODAL
 ============================================================ */
 
 function closeModal() {
@@ -3821,7 +3876,7 @@ function closeModal() {
 
 
 /* ============================================================
-   19. CERRAR MODAL AL HACER CLICK FUERA
+   20. CERRAR MODAL AL HACER CLICK FUERA
 ============================================================ */
 
 function closeModalOnOverlay(
@@ -3842,7 +3897,7 @@ function closeModalOnOverlay(
 
 
 /* ============================================================
-   20. NAVEGACIÓN DE LA REVISTA
+   21. NAVEGACIÓN DE LA REVISTA
 ============================================================ */
 
 let currentPage = 1;
@@ -3960,7 +4015,7 @@ function goToPage(
 
 
 /* ============================================================
-   21. TECLADO
+   22. TECLADO
 ============================================================ */
 
 document.addEventListener(
@@ -4039,7 +4094,7 @@ document.addEventListener(
 
 
 /* ============================================================
-   22. CONFETTI
+   23. CONFETTI
 ============================================================ */
 
 function triggerConfetti() {
@@ -4068,7 +4123,7 @@ function triggerConfetti() {
 
 
 /* ============================================================
-   23. SWIPE EN CELULAR
+   24. SWIPE EN CELULAR
 ============================================================ */
 
 let touchStartX = 0;
@@ -4128,7 +4183,7 @@ bookElement.addEventListener(
 
 
 /* ============================================================
-   24. INICIALIZAR REVISTA
+   25. INICIALIZAR REVISTA
 ============================================================ */
 
 window.addEventListener(
