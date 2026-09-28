@@ -1503,7 +1503,8 @@ body {
             </i>
 
             Haz clic sobre una fecha para
-            visualizar sus conmemoraciones.
+            visualizar sus conmemoraciones,
+            actividades y celebraciones.
 
         </p>
 
@@ -1889,7 +1890,8 @@ const revista = {
 
     portada: {
 
-        titulo: "Fechas Especiales & Conmemoraciones",
+        titulo:
+            "Fechas Especiales & Conmemoraciones",
 
         subtitulo:
             "Un espacio dedicado a reconocer el compromiso, la vocación y la integración de nuestra comunidad institucional.",
@@ -1938,36 +1940,60 @@ const revista = {
 
 
 /* ============================================================
-   2. 📅 EVENTOS Y CONMEMORACIONES
+   2. 📅 EVENTOS DEL MES
 ============================================================
 
-   PARA AGREGAR UNA FECHA:
+   TODO lo que aparezca en el calendario debe registrarse aquí.
 
-   1. Copia uno de estos bloques.
-   2. Cambia "dia".
-   3. Cambia "titulo".
-   4. Cambia "descripcion".
-   5. Cambia el nombre del flyer.
+   TIPOS DISPONIBLES:
 
-   IMPORTANTE:
+   "conmemoracion"
+   "reconocimiento"
+   "cumpleanos"
+   "educacion"
+   "celebracion"
+   "actividad"
+   "campana"
 
-   Puedes escribir el flyer SIN extensión.
+   PARA UN CUMPLEAÑOS:
 
-   Ejemplo:
+   {
+       id: 8,
 
-       "09-archivista"
+       dia: "05",
+
+       titulo:
+           "Cumpleaños de Karen Mildred Celis Guerrero",
+
+       descripcion:
+           "Celebramos el cumpleaños de nuestra compañera.",
+
+       tipo:
+           "cumpleanos",
+
+       persona:
+           "Karen Mildred Celis Guerrero",
+
+       flyers: [
+           "05-cumpleanos-karen"
+       ]
+   }
 
    El sistema buscará automáticamente:
 
-       PNG
-       JPG
-       JPEG
-       WEBP
+   PNG
+   JPG
+   JPEG
+   WEBP
 
 ============================================================ */
 
 
 const eventos = [
+
+    /* ========================================================
+       01 OCTUBRE
+    ======================================================== */
 
     {
         id: 1,
@@ -1988,6 +2014,10 @@ const eventos = [
         ]
     },
 
+
+    /* ========================================================
+       09 OCTUBRE
+    ======================================================== */
 
     {
         id: 2,
@@ -2018,6 +2048,10 @@ const eventos = [
     },
 
 
+    /* ========================================================
+       12 OCTUBRE
+    ======================================================== */
+
     {
         id: 3,
 
@@ -2038,16 +2072,20 @@ const eventos = [
     },
 
 
+    /* ========================================================
+       16 OCTUBRE
+    ======================================================== */
+
     {
         id: 4,
 
         dia: "16",
 
         titulo:
-            "Conmemoraciones del 16 de Octubre",
+            "Día del Anestesiólogo",
 
         descripcion:
-            "Día del Anestesiólogo y reconocimiento directivo.",
+            "Reconocimiento a Marlon Francisco Romero Bohórquez.",
 
         tipo:
             "reconocimiento",
@@ -2062,23 +2100,40 @@ const eventos = [
             "M",
 
         flyers: [
-
-            "16-anestesiologo",
-
-            "16-directivo",
-
-            "16-reconocimiento-marlon",
-
-            "16-reconocimiento-ariel",
-
-            "16-reconocimiento-luis"
-
+            "16-anestesiologo"
         ]
     },
 
 
     {
         id: 5,
+
+        dia: "16",
+
+        titulo:
+            "Reconocimientos Directivos",
+
+        descripcion:
+            "Reconocimientos institucionales especiales.",
+
+        tipo:
+            "reconocimiento",
+
+        flyers: [
+            "16-directivo",
+            "16-reconocimiento-marlon",
+            "16-reconocimiento-ariel",
+            "16-reconocimiento-luis"
+        ]
+    },
+
+
+    /* ========================================================
+       17 OCTUBRE
+    ======================================================== */
+
+    {
+        id: 6,
 
         dia: "17",
 
@@ -2106,61 +2161,195 @@ const eventos = [
     },
 
 
-    {
-        id: 6,
-
-        dia: "25",
-
-        titulo:
-            "Día del Instrumentador Quirúrgico",
-
-        descripcion:
-            "Reconocimiento a Rosa Linda Ospino Luna.",
-
-        tipo:
-            "reconocimiento",
-
-        persona:
-            "Rosa Linda Ospino Luna",
-
-        cargo:
-            "Instrumentadora Quirúrgica",
-
-        inicial:
-            "R",
-
-        flyers: [
-            "25-instrumentador-quirurgico"
-        ]
-    },
-
+    /* ========================================================
+       🎂 CUMPLEAÑOS
+       
+       IMPORTANTE:
+       Estos son ejemplos de estructura.
+       Cambia las fechas por las fechas REALES.
+    ======================================================== */
 
     {
         id: 7,
 
-        dia: "27",
+        dia: "05",
 
         titulo:
-            "Educación Continuada & Cumpleaños",
+            "Cumpleaños de Karen Mildred Celis Guerrero",
 
         descripcion:
-            "Jornada institucional y celebración de cumpleaños.",
+            "Celebramos el cumpleaños de nuestra compañera.",
 
         tipo:
             "cumpleanos",
 
+        persona:
+            "Karen Mildred Celis Guerrero",
+
         flyers: [
-
-            "27-educacion",
-
-            "27-cumpleanos"
-
+            "05-cumpleanos-karen"
         ]
     },
 
 
     {
         id: 8,
+
+        dia: "12",
+
+        titulo:
+            "Cumpleaños de Sergio Eduardo Ospina Hernández",
+
+        descripcion:
+            "Celebramos el cumpleaños de nuestro compañero.",
+
+        tipo:
+            "cumpleanos",
+
+        persona:
+            "Sergio Eduardo Ospina Hernández",
+
+        flyers: [
+            "12-cumpleanos-sergio"
+        ]
+    },
+
+
+    {
+        id: 9,
+
+        dia: "18",
+
+        titulo:
+            "Cumpleaños de Rafael Alfonso Orta Pérez",
+
+        descripcion:
+            "Celebramos el cumpleaños de nuestro compañero.",
+
+        tipo:
+            "cumpleanos",
+
+        persona:
+            "Rafael Alfonso Orta Pérez",
+
+        flyers: [
+            "18-cumpleanos-rafael"
+        ]
+    },
+
+
+    {
+        id: 10,
+
+        dia: "24",
+
+        titulo:
+            "Cumpleaños de Carlos Alfonso Delgado Nieto",
+
+        descripcion:
+            "Celebramos el cumpleaños de nuestro compañero.",
+
+        tipo:
+            "cumpleanos",
+
+        persona:
+            "Carlos Alfonso Delgado Nieto",
+
+        flyers: [
+            "24-cumpleanos-carlos"
+        ]
+    },
+
+
+    /* ========================================================
+       27 OCTUBRE
+       EDUCACIÓN CONTINUADA
+    ======================================================== */
+
+    {
+        id: 11,
+
+        dia: "27",
+
+        titulo:
+            "Educación Continuada",
+
+        descripcion:
+            "Jornada institucional de Educación Continuada.",
+
+        tipo:
+            "educacion",
+
+        flyers: [
+            "27-educacion"
+        ]
+    },
+
+
+    /* ========================================================
+       27 OCTUBRE
+       EJEMPLO DE OTRO CUMPLEAÑOS
+       
+       Si alguien cumple este día,
+       se agrega como OTRO evento.
+    ======================================================== */
+
+    /*
+    {
+        id: 12,
+
+        dia: "27",
+
+        titulo:
+            "Cumpleaños de Nombre del Colaborador",
+
+        descripcion:
+            "Celebramos el cumpleaños de nuestro compañero.",
+
+        tipo:
+            "cumpleanos",
+
+        persona:
+            "Nombre del Colaborador",
+
+        flyers: [
+            "27-cumpleanos-nombre"
+        ]
+    },
+    */
+
+
+    /* ========================================================
+       30 OCTUBRE
+       CELEBRACIÓN GENERAL
+    ======================================================== */
+
+    {
+        id: 13,
+
+        dia: "30",
+
+        titulo:
+            "Celebración de Cumpleaños - Octubre",
+
+        descripcion:
+            "Espacio institucional para celebrar a los cumpleañeros del mes.",
+
+        tipo:
+            "celebracion",
+
+        flyers: [
+            "30-celebracion-cumpleanos"
+        ]
+    },
+
+
+    /* ========================================================
+       31 OCTUBRE
+    ======================================================== */
+
+    {
+        id: 14,
 
         dia: "31",
 
@@ -2182,45 +2371,6 @@ const eventos = [
 
 
 
-/* ============================================================
-   3. 🎂 CUMPLEAÑEROS
-============================================================
-
-   SOLO NECESITAS PONER:
-
-   nombre
-
-   No necesitas escribir cargo ni fecha.
-
-============================================================ */
-
-
-const cumpleanos = [
-
-    {
-        nombre:
-            "Karen Mildred Celis Guerrero"
-    },
-
-    {
-        nombre:
-            "Sergio Eduardo Ospina Hernández"
-    },
-
-    {
-        nombre:
-            "Rafael Alfonso Orta Pérez"
-    },
-
-    {
-        nombre:
-            "Carlos Alfonso Delgado Nieto"
-    }
-
-];
-
-
-
 /****************************************************************
  *
  *             ⚠️ FIN DE LA ZONA DE EDICIÓN
@@ -2231,18 +2381,8 @@ const cumpleanos = [
 
 
 /* ============================================================
-   4. CONFIGURACIÓN AUTOMÁTICA DEL CALENDARIO
+   3. CONFIGURACIÓN AUTOMÁTICA DEL CALENDARIO
 ============================================================ */
-
-
-/*
-   JavaScript calcula automáticamente:
-
-   - Cuántos días tiene el mes.
-   - Qué día de la semana comienza.
-   - Los años bisiestos.
-*/
-
 
 const diasMes =
     new Date(
@@ -2250,21 +2390,6 @@ const diasMes =
         revista.mes,
         0
     ).getDate();
-
-
-/*
-   JavaScript:
-   Domingo = 0
-   Lunes = 1
-   Martes = 2
-   ...
-
-   Nosotros queremos:
-   Lunes = 0
-   Martes = 1
-   ...
-
-*/
 
 
 const primerDiaJavaScript =
@@ -2283,7 +2408,7 @@ const primerDia =
 
 
 /* ============================================================
-   5. CONFIGURAR TEXTOS AUTOMÁTICAMENTE
+   4. CONFIGURAR TEXTOS AUTOMÁTICAMENTE
 ============================================================ */
 
 function configurarRevista() {
@@ -2295,7 +2420,7 @@ function configurarRevista() {
     document.getElementById(
         "header-title"
     ).innerText =
-        `Revista Digital Institucional`;
+        "Revista Digital Institucional";
 
 
     document.getElementById(
@@ -2304,13 +2429,8 @@ function configurarRevista() {
         `Edición ${revista.nombreMes} ${revista.anio}`;
 
 
-    /*
-       Portada
-    */
-
     const portadaTitulo =
-        revista.portada.titulo
-            .split("&");
+        revista.portada.titulo.split("&");
 
 
     document.getElementById(
@@ -2348,10 +2468,6 @@ function configurarRevista() {
         revista.portada.tarjetaDescripcion;
 
 
-    /*
-       Editorial
-    */
-
     document.getElementById(
         "editorial-title"
     ).innerText =
@@ -2376,19 +2492,11 @@ function configurarRevista() {
         revista.editorial.cierre;
 
 
-    /*
-       Calendario
-    */
-
     document.getElementById(
         "calendar-title"
     ).innerText =
         `Calendario ${revista.nombreMes} ${revista.anio}`;
 
-
-    /*
-       Cierre
-    */
 
     document.getElementById(
         "closing-title"
@@ -2408,10 +2516,6 @@ function configurarRevista() {
         revista.cierre.area;
 
 
-    /*
-       Footer
-    */
-
     document.getElementById(
         "footer-text"
     ).innerText =
@@ -2422,19 +2526,8 @@ function configurarRevista() {
 
 
 /* ============================================================
-   6. FUNCIÓN PARA OBTENER NOMBRE COMPLETO DEL FLYER
-============================================================
-
-   Permite escribir:
-
-       "01-archivista"
-
-   en lugar de:
-
-       "01-archivista.jpg"
-
+   5. EXTENSIONES DE IMAGEN
 ============================================================ */
-
 
 const extensionesImagen = [
 
@@ -2448,11 +2541,6 @@ const extensionesImagen = [
 
 function obtenerRutaImagen(nombre) {
 
-    /*
-       Si ya tiene extensión,
-       la utiliza directamente.
-    */
-
     if (
         /\.(png|jpg|jpeg|webp)$/i.test(nombre)
     ) {
@@ -2462,14 +2550,6 @@ function obtenerRutaImagen(nombre) {
     }
 
 
-    /*
-       Por defecto comenzamos
-       con PNG.
-
-       El sistema probará
-       automáticamente las demás.
-    */
-
     return `assets/${nombre}.png`;
 
 }
@@ -2477,7 +2557,7 @@ function obtenerRutaImagen(nombre) {
 
 
 /* ============================================================
-   7. CARGAR IMAGEN PROBANDO EXTENSIONES
+   6. CARGAR IMAGEN PROBANDO EXTENSIONES
 ============================================================ */
 
 function cargarImagenConExtension(
@@ -2487,11 +2567,6 @@ function cargarImagenConExtension(
     callback
 
 ) {
-
-    /*
-       Si el usuario ya escribió
-       una extensión.
-    */
 
     if (
         /\.(png|jpg|jpeg|webp)$/i.test(nombre)
@@ -2563,7 +2638,7 @@ function cargarImagenConExtension(
 
 
 /* ============================================================
-   8. GENERAR CALENDARIO
+   7. GENERAR CALENDARIO
 ============================================================ */
 
 function generarCalendario() {
@@ -2609,11 +2684,6 @@ function generarCalendario() {
     });
 
 
-    /*
-       Espacios antes
-       del primer día.
-    */
-
     for (
         let i = 0;
         i < primerDia;
@@ -2632,10 +2702,6 @@ function generarCalendario() {
 
     }
 
-
-    /*
-       Generar días
-    */
 
     for (
         let dia = 1;
@@ -2730,17 +2796,42 @@ function generarCalendario() {
                         evento
                     ) =>
                         total +
-                        evento.flyers.length,
+                        (
+                            evento.flyers
+                                ? evento.flyers.length
+                                : 0
+                        ),
                     0
                 );
 
 
             if (
+                eventosDia.length === 1 &&
+                eventosDia[0].tipo ===
+                "cumpleanos"
+            ) {
+
+                badge.innerText =
+                    "🎂 Cumpleaños";
+
+            }
+
+            else if (
+                eventosDia.length === 1 &&
                 cantidadFlyers === 1
             ) {
 
                 badge.innerText =
                     "Ver fecha";
+
+            }
+
+            else if (
+                eventosDia.length > 1
+            ) {
+
+                badge.innerText =
+                    `${eventosDia.length} eventos`;
 
             }
 
@@ -2777,7 +2868,7 @@ function generarCalendario() {
 
 
 /* ============================================================
-   9. ABRIR EVENTOS DE UN DÍA
+   8. ABRIR EVENTOS DE UN DÍA
 ============================================================ */
 
 function abrirEventosDelDia(
@@ -2799,7 +2890,7 @@ function abrirEventosDelDia(
     const todosLosFlyers =
         eventosDia.flatMap(
             evento =>
-                evento.flyers
+                evento.flyers || []
         );
 
 
@@ -2827,7 +2918,7 @@ function abrirEventosDelDia(
 
 
 /* ============================================================
-   10. GENERAR HOMENAJEADOS
+   9. GENERAR HOMENAJEADOS
 ============================================================ */
 
 function generarHomenajeados() {
@@ -2950,7 +3041,12 @@ function generarHomenajeados() {
 
 
 /* ============================================================
-   11. GENERAR CUMPLEAÑOS
+   10. GENERAR CUMPLEAÑOS
+============================================================
+
+   AHORA LOS CUMPLEAÑOS SALEN DIRECTAMENTE
+   DE "eventos".
+
 ============================================================ */
 
 function generarCumpleanos() {
@@ -2964,8 +3060,16 @@ function generarCumpleanos() {
     container.innerHTML = "";
 
 
+    const cumpleanosDelMes =
+        eventos.filter(
+            evento =>
+                evento.tipo ===
+                "cumpleanos"
+        );
+
+
     if (
-        cumpleanos.length === 0
+        cumpleanosDelMes.length === 0
     ) {
 
         container.innerHTML = `
@@ -2990,8 +3094,8 @@ function generarCumpleanos() {
     }
 
 
-    cumpleanos.forEach(
-        persona => {
+    cumpleanosDelMes.forEach(
+        evento => {
 
             const card =
                 document.createElement(
@@ -3007,8 +3111,22 @@ function generarCumpleanos() {
                 "3px solid var(--birthday-pink)";
 
 
-            card.onclick =
-                triggerConfetti;
+            card.onclick = () => {
+
+                openFlyerModal(
+
+                    evento.dia,
+
+                    evento.flyers,
+
+                    evento.titulo
+
+                );
+
+
+                triggerConfetti();
+
+            };
 
 
             card.innerHTML = `
@@ -3029,11 +3147,18 @@ function generarCumpleanos() {
                 <div class="honoree-info">
 
                     <h4>
-                        ${persona.nombre}
+                        ${evento.persona}
                     </h4>
 
                     <p>
-                        Celebración de cumpleaños
+
+                        ${evento.dia}
+                        ${revista.nombreMes.substring(0,3)}
+
+                        ·
+
+                        Cumpleaños
+
                     </p>
 
                 </div>
@@ -3053,7 +3178,7 @@ function generarCumpleanos() {
 
 
 /* ============================================================
-   12. GENERAR GALERÍA
+   11. GENERAR GALERÍA
 ============================================================ */
 
 function generarGaleria() {
@@ -3073,8 +3198,8 @@ function generarGaleria() {
     eventos.forEach(
         evento => {
 
-            evento.flyers.forEach(
-                (flyer) => {
+            (evento.flyers || []).forEach(
+                flyer => {
 
                     contador++;
 
@@ -3156,11 +3281,6 @@ function generarGaleria() {
                     );
 
 
-                    /*
-                       Buscar automáticamente
-                       PNG / JPG / JPEG / WEBP
-                    */
-
                     cargarImagenConExtension(
 
                         flyer,
@@ -3207,10 +3327,6 @@ function generarGaleria() {
     );
 
 
-    /*
-       Si no hay flyers
-    */
-
     if (
         contador === 0
     ) {
@@ -3251,7 +3367,7 @@ function generarGaleria() {
 
 
 /* ============================================================
-   13. MODAL DE FLYERS
+   12. MODAL DE FLYERS
 ============================================================ */
 
 let currentFlyers = [];
@@ -3311,7 +3427,7 @@ function openFlyerModal(
 
 
 /* ============================================================
-   14. MOSTRAR FLYER ACTUAL
+   13. MOSTRAR FLYER ACTUAL
 ============================================================ */
 
 function showCurrentFlyer() {
@@ -3438,7 +3554,7 @@ function showCurrentFlyer() {
 
 
 /* ============================================================
-   15. SIGUIENTE FLYER
+   14. SIGUIENTE FLYER
 ============================================================ */
 
 function nextFlyer() {
@@ -3459,7 +3575,7 @@ function nextFlyer() {
 
 
 /* ============================================================
-   16. FLYER ANTERIOR
+   15. FLYER ANTERIOR
 ============================================================ */
 
 function previousFlyer() {
@@ -3479,7 +3595,7 @@ function previousFlyer() {
 
 
 /* ============================================================
-   17. CERRAR MODAL
+   16. CERRAR MODAL
 ============================================================ */
 
 function closeModal() {
@@ -3497,7 +3613,7 @@ function closeModal() {
 
 
 /* ============================================================
-   18. CERRAR MODAL AL HACER CLICK FUERA
+   17. CERRAR MODAL AL HACER CLICK FUERA
 ============================================================ */
 
 function closeModalOnOverlay(
@@ -3518,7 +3634,7 @@ function closeModalOnOverlay(
 
 
 /* ============================================================
-   19. NAVEGACIÓN DE LA REVISTA
+   18. NAVEGACIÓN DE LA REVISTA
 ============================================================ */
 
 let currentPage = 1;
@@ -3636,7 +3752,7 @@ function goToPage(
 
 
 /* ============================================================
-   20. TECLADO
+   19. TECLADO
 ============================================================ */
 
 document.addEventListener(
@@ -3648,11 +3764,6 @@ document.addEventListener(
                 "flyer-modal"
             );
 
-
-        /*
-           Si el modal está abierto:
-           las flechas cambian flyers.
-        */
 
         if (
             modal.classList.contains(
@@ -3695,11 +3806,6 @@ document.addEventListener(
         }
 
 
-        /*
-           Si el modal está cerrado:
-           las flechas cambian páginas.
-        */
-
         if (
             event.key ===
             "ArrowRight"
@@ -3725,7 +3831,7 @@ document.addEventListener(
 
 
 /* ============================================================
-   21. CONFETTI
+   20. CONFETTI
 ============================================================ */
 
 function triggerConfetti() {
@@ -3754,7 +3860,7 @@ function triggerConfetti() {
 
 
 /* ============================================================
-   22. SWIPE EN CELULAR
+   21. SWIPE EN CELULAR
 ============================================================ */
 
 let touchStartX = 0;
@@ -3814,7 +3920,7 @@ bookElement.addEventListener(
 
 
 /* ============================================================
-   23. INICIALIZAR REVISTA
+   22. INICIALIZAR REVISTA
 ============================================================ */
 
 window.addEventListener(
@@ -3840,4 +3946,3 @@ window.addEventListener(
 
 </body>
 </html>
-```
