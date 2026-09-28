@@ -1,23 +1,35 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Revista Digital Institucional - Octubre 2026</title>
+<title>Revista Digital Institucional</title>
 
-    <!-- FUENTES -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- ============================================================
+     FUENTES
+============================================================ -->
 
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <!-- CONFETTI -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- FONT AWESOME -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- ============================================================
+     CONFETTI
+============================================================ -->
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+
+<!-- ============================================================
+     FONT AWESOME
+============================================================ -->
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 
 <style>
@@ -54,9 +66,9 @@
 }
 
 
-/* =========================
+/* ============================================================
    GENERAL
-========================= */
+============================================================ */
 
 * {
     box-sizing: border-box;
@@ -83,9 +95,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    HEADER
-========================= */
+============================================================ */
 
 .app-header {
 
@@ -174,19 +186,24 @@ body {
     align-items: center;
 
     gap: 6px;
+
+    transition: .2s;
 }
+
 
 .btn-header:hover {
 
     background: var(--primary-blue);
 
     color: white;
+
+    transform: translateY(-1px);
 }
 
 
-/* =========================
+/* ============================================================
    MAGAZINE
-========================= */
+============================================================ */
 
 .magazine-viewport {
 
@@ -248,6 +265,8 @@ body {
 
     visibility: hidden;
 
+    transform: translateX(20px);
+
     transition:
         transform .6s ease,
         opacity .4s ease;
@@ -274,9 +293,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    PAGE HEADER
-========================= */
+============================================================ */
 
 .page-header {
 
@@ -322,9 +341,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    NAVIGATION
-========================= */
+============================================================ */
 
 .navigation-bar {
 
@@ -369,6 +388,8 @@ body {
     justify-content: center;
 
     cursor: pointer;
+
+    transition: .2s;
 }
 
 
@@ -404,9 +425,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    PORTADA
-========================= */
+============================================================ */
 
 .page-cover {
 
@@ -489,9 +510,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    CALENDARIO
-========================= */
+============================================================ */
 
 .calendar-grid {
 
@@ -545,6 +566,8 @@ body {
     justify-content: space-between;
 
     position: relative;
+
+    transition: .2s;
 }
 
 
@@ -635,9 +658,9 @@ body {
 }
 
 
-/* =========================
-   HONOREES
-========================= */
+/* ============================================================
+   HOMENAJEADOS
+============================================================ */
 
 .honorees-grid {
 
@@ -724,9 +747,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    GALERÍA
-========================= */
+============================================================ */
 
 .gallery-grid {
 
@@ -758,6 +781,8 @@ body {
 .gallery-item:hover {
 
     transform: scale(1.03);
+
+    box-shadow: var(--shadow-soft);
 }
 
 
@@ -807,9 +832,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    MODAL
-========================= */
+============================================================ */
 
 .modal-overlay {
 
@@ -1039,9 +1064,9 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
    FOOTER
-========================= */
+============================================================ */
 
 .app-footer {
 
@@ -1055,9 +1080,47 @@ body {
 }
 
 
-/* =========================
+/* ============================================================
+   MENSAJE DE IMAGEN NO ENCONTRADA
+============================================================ */
+
+.image-error {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    height: 100%;
+
+    width: 100%;
+
+    color: var(--text-muted);
+
+    font-size: 11px;
+
+    padding: 15px;
+
+    text-align: center;
+}
+
+
+.image-error i {
+
+    font-size: 25px;
+
+    color: var(--primary-blue);
+}
+
+
+/* ============================================================
    RESPONSIVE
-========================= */
+============================================================ */
 
 @media(max-width:768px) {
 
@@ -1101,6 +1164,71 @@ body {
 
         font-size: 7px;
     }
+
+    .brand-logo h1 {
+
+        font-size: 14px;
+    }
+
+    .btn-header {
+
+        padding: 7px 10px;
+
+        font-size: 11px;
+    }
+
+}
+
+
+@media(max-width:500px) {
+
+    .header-controls .btn-header {
+
+        font-size: 0;
+
+        width: 38px;
+
+        height: 38px;
+
+        padding: 0;
+
+        justify-content: center;
+    }
+
+    .header-controls .btn-header i {
+
+        font-size: 15px;
+    }
+
+    .gallery-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+    .calendar-grid {
+
+        gap: 2px;
+    }
+
+    .day-cell {
+
+        min-height: 48px;
+
+        padding: 4px;
+    }
+
+    .day-number {
+
+        font-size: 11px;
+    }
+
+    .day-badge {
+
+        font-size: 6px;
+
+        padding: 2px;
+    }
+
 }
 
 </style>
@@ -1120,7 +1248,7 @@ body {
 
         <i class="fa-solid fa-book-open-reader"></i>
 
-        <h1>
+        <h1 id="header-title">
             Revista Digital Institucional
         </h1>
 
@@ -1163,26 +1291,28 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 1
+     PÁGINA 1 — PORTADA
 ============================================================ -->
 
 <article class="page page-cover active" id="page-1">
 
-    <span class="cover-badge">
-        Edición Octubre 2026
+    <span class="cover-badge" id="cover-edition">
+        Edición
     </span>
 
 
     <h2 class="cover-title">
 
-        Fechas Especiales
-        <br>
-        & Conmemoraciones
+        <span id="cover-title">
+            Fechas Especiales
+            <br>
+            & Conmemoraciones
+        </span>
 
     </h2>
 
 
-    <p class="cover-subtitle">
+    <p class="cover-subtitle" id="cover-subtitle">
 
         Un espacio dedicado a reconocer
         el compromiso, la vocación y
@@ -1205,6 +1335,7 @@ body {
 
 
         <h3
+            id="cover-card-title"
             style="
                 color:var(--dark-blue);
                 font-size:16px;
@@ -1217,6 +1348,7 @@ body {
 
 
         <p
+            id="cover-card-description"
             style="
                 font-size:12.5px;
                 color:var(--text-muted);
@@ -1251,7 +1383,7 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 2
+     PÁGINA 2 — EDITORIAL
 ============================================================ -->
 
 <article class="page" id="page-2">
@@ -1272,17 +1404,23 @@ body {
     <div class="page-body">
 
         <h3
+            id="editorial-title"
             style="
                 color:var(--primary-blue);
                 margin-bottom:15px;
             ">
 
-            Compromiso y Humanización en Octubre
+            Compromiso y Humanización
 
         </h3>
 
 
-        <p style="line-height:1.7;margin-bottom:15px;">
+        <p
+            id="editorial-introduction"
+            style="
+                line-height:1.7;
+                margin-bottom:15px;
+            ">
 
             Estimada comunidad institucional,
             nos complace presentar la edición
@@ -1299,7 +1437,8 @@ body {
                 margin:20px 0;
                 font-style:italic;
                 color:var(--dark-blue);
-            ">
+            "
+            id="editorial-quote">
 
             “La excelencia en el servicio no es
             un acto aislado, sino el resultado
@@ -1309,9 +1448,13 @@ body {
         </div>
 
 
-        <p style="line-height:1.7;">
+        <p
+            id="editorial-closing"
+            style="
+                line-height:1.7;
+            ">
 
-            Durante octubre destacamos fechas,
+            Durante este mes destacamos fechas,
             personas y actividades que fortalecen
             nuestra cultura institucional.
 
@@ -1324,15 +1467,19 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 3 – CALENDARIO
+     PÁGINA 3 — CALENDARIO
 ============================================================ -->
 
 <article class="page" id="page-3">
 
     <div class="page-header">
 
-        <h2 class="page-title">
-            Calendario Octubre 2026
+        <h2
+            class="page-title"
+            id="calendar-title">
+
+            Calendario
+
         </h2>
 
         <span class="page-number">
@@ -1362,8 +1509,6 @@ body {
         </p>
 
 
-        <!-- CALENDARIO GENERADO AUTOMÁTICAMENTE -->
-
         <div
             class="calendar-grid"
             id="calendar">
@@ -1377,7 +1522,7 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 4 – HOMENAJEADOS
+     PÁGINA 4 — HOMENAJEADOS
 ============================================================ -->
 
 <article class="page" id="page-4">
@@ -1445,7 +1590,7 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 5 – GALERÍA
+     PÁGINA 5 — GALERÍA
 ============================================================ -->
 
 <article class="page" id="page-5">
@@ -1491,7 +1636,7 @@ body {
 
 
 <!-- ============================================================
-     PÁGINA 6
+     PÁGINA 6 — CIERRE
 ============================================================ -->
 
 <article
@@ -1520,7 +1665,8 @@ body {
                 color:var(--dark-blue);
                 font-size:24px;
                 margin-bottom:8px;
-            ">
+            "
+            id="closing-title">
 
             ¡Gracias por ser parte
             de nuestra comunidad!
@@ -1534,7 +1680,8 @@ body {
                 color:var(--text-muted);
                 line-height:1.6;
                 margin-bottom:24px;
-            ">
+            "
+            id="closing-text">
 
             Esta revista es una iniciativa
             para fortalecer nuestros lazos,
@@ -1553,7 +1700,7 @@ body {
                 color:var(--dark-blue);
             ">
 
-            <strong>
+            <strong id="closing-area">
                 Área de Gestión Humana & Bienestar
             </strong>
 
@@ -1569,6 +1716,7 @@ body {
 
 
 </div>
+
 
 
 <!-- ============================================================
@@ -1644,7 +1792,6 @@ body {
 
         <div class="modal-body">
 
-
             <div
                 class="flyer-image-container"
                 id="flyer-container">
@@ -1653,7 +1800,6 @@ body {
 
 
             <div class="flyer-navigation">
-
 
                 <button
                     class="flyer-nav-btn"
@@ -1678,7 +1824,6 @@ body {
                     <i class="fa-solid fa-chevron-right"></i>
 
                 </button>
-
 
             </div>
 
@@ -1705,7 +1850,9 @@ body {
 
 <footer class="app-footer">
 
-    Revista Digital Institucional © Octubre 2026
+    <span id="footer-text">
+        Revista Digital Institucional
+    </span>
 
 </footer>
 
@@ -1714,12 +1861,109 @@ body {
 <script>
 
 
+/****************************************************************
+ ****************************************************************
+ *
+ *        ✏️✏️✏️  ZONA DE EDICIÓN MENSUAL  ✏️✏️✏️
+ *
+ *        ESTA ES LA PARTE QUE CAMBIARÁS CADA MES
+ *
+ *        EL RESTO DEL CÓDIGO NO NECESITAS TOCARLO.
+ *
+ ****************************************************************
+ ****************************************************************/
+
+
 /* ============================================================
-   1. DATOS DEL MES
+   1. INFORMACIÓN GENERAL DEL MES
+============================================================ */
+
+const revista = {
+
+    mes: 10,
+
+    anio: 2026,
+
+    nombreMes: "Octubre",
+
+    nombreMesMayusculas: "OCTUBRE",
+
+    portada: {
+
+        titulo: "Fechas Especiales & Conmemoraciones",
+
+        subtitulo:
+            "Un espacio dedicado a reconocer el compromiso, la vocación y la integración de nuestra comunidad institucional.",
+
+        tarjetaTitulo:
+            "Atención Humanizada y Bienestar",
+
+        tarjetaDescripcion:
+            "Descubre las actividades, reconocimientos y fechas clave preparadas para este mes."
+
+    },
+
+
+    editorial: {
+
+        titulo:
+            "Compromiso y Humanización en Octubre",
+
+        introduccion:
+            "Estimada comunidad institucional, nos complace presentar la edición mensual de nuestra Revista Digital.",
+
+        frase:
+            "La excelencia en el servicio no es un acto aislado, sino el resultado del esfuerzo diario y empático de todo nuestro equipo humano.",
+
+        cierre:
+            "Durante este mes destacamos fechas, personas y actividades que fortalecen nuestra cultura institucional."
+
+    },
+
+
+    cierre: {
+
+        titulo:
+            "¡Gracias por ser parte de nuestra comunidad!",
+
+        texto:
+            "Esta revista es una iniciativa para fortalecer nuestros lazos, destacar tus logros y mantenernos unidos en cada celebración.",
+
+        area:
+            "Área de Gestión Humana & Bienestar"
+
+    }
+
+};
+
+
+
+/* ============================================================
+   2. 📅 EVENTOS Y CONMEMORACIONES
 ============================================================
 
-   ESTA ES LA ÚNICA PARTE QUE TENDRÁS QUE CAMBIAR
-   CADA MES.
+   PARA AGREGAR UNA FECHA:
+
+   1. Copia uno de estos bloques.
+   2. Cambia "dia".
+   3. Cambia "titulo".
+   4. Cambia "descripcion".
+   5. Cambia el nombre del flyer.
+
+   IMPORTANTE:
+
+   Puedes escribir el flyer SIN extensión.
+
+   Ejemplo:
+
+       "09-archivista"
+
+   El sistema buscará automáticamente:
+
+       PNG
+       JPG
+       JPEG
+       WEBP
 
 ============================================================ */
 
@@ -1728,29 +1972,37 @@ const eventos = [
 
     {
         id: 1,
+
         dia: "01",
-        titulo: "Día de la Atención Humanizada en Salud",
+
+        titulo:
+            "Día de la Atención Humanizada en Salud",
 
         descripcion:
             "Clientes externos presentes en la institución.",
 
-        tipo: "conmemoracion",
+        tipo:
+            "conmemoracion",
 
         flyers: [
-            "01-atencion-humanizada.jpg"
+            "01-atencion-humanizada"
         ]
     },
 
 
     {
         id: 2,
+
         dia: "09",
-        titulo: "Día Mundial del Archivista",
+
+        titulo:
+            "Día Mundial del Archivista",
 
         descripcion:
             "Homenaje especial a Paola Andrea Pino Cuéllar.",
 
-        tipo: "reconocimiento",
+        tipo:
+            "reconocimiento",
 
         persona:
             "Paola Andrea Pino Cuéllar",
@@ -1762,32 +2014,30 @@ const eventos = [
             "P",
 
         flyers: [
-            "09-archivista.jpg"
+            "09-archivista"
         ]
     },
 
 
     {
         id: 3,
+
         dia: "12",
-        titulo: "Día Mundial de la Salud Mental",
+
+        titulo:
+            "Día Mundial de la Salud Mental",
 
         descripcion:
             "Actividad dirigida a clientes internos y externos.",
 
-        tipo: "conmemoracion",
+        tipo:
+            "conmemoracion",
 
         flyers: [
-            "12-salud-mental.jpg"
+            "12-salud-mental"
         ]
     },
 
-
-    /*
-    ============================================================
-    EJEMPLO DE UN DÍA CON VARIOS FLYERS
-    ============================================================
-    */
 
     {
         id: 4,
@@ -1800,7 +2050,8 @@ const eventos = [
         descripcion:
             "Día del Anestesiólogo y reconocimiento directivo.",
 
-        tipo: "reconocimiento",
+        tipo:
+            "reconocimiento",
 
         persona:
             "Marlon Francisco Romero Bohórquez",
@@ -1813,15 +2064,15 @@ const eventos = [
 
         flyers: [
 
-            "16-anestesiologo.jpg",
+            "16-anestesiologo",
 
-            "16-directivo.jpg",
+            "16-directivo",
 
-            "16-reconocimiento-marlon.jpg",
+            "16-reconocimiento-marlon",
 
-            "16-reconocimiento-ariel.jpg",
+            "16-reconocimiento-ariel",
 
-            "16-reconocimiento-luis.jpg"
+            "16-reconocimiento-luis"
 
         ]
     },
@@ -1851,7 +2102,7 @@ const eventos = [
             "A",
 
         flyers: [
-            "17-servicio-farmaceutico.jpg"
+            "17-servicio-farmaceutico"
         ]
     },
 
@@ -1880,7 +2131,7 @@ const eventos = [
             "R",
 
         flyers: [
-            "25-instrumentador-quirurgico.jpg"
+            "25-instrumentador-quirurgico"
         ]
     },
 
@@ -1900,8 +2151,11 @@ const eventos = [
             "cumpleanos",
 
         flyers: [
-            "27-educacion.jpg",
-            "27-cumpleanos.jpg"
+
+            "27-educacion",
+
+            "27-cumpleanos"
+
         ]
     },
 
@@ -1921,7 +2175,7 @@ const eventos = [
             "conmemoracion",
 
         flyers: [
-            "31-dia-de-los-ninos.jpg"
+            "31-dia-de-los-ninos"
         ]
     }
 
@@ -1930,8 +2184,17 @@ const eventos = [
 
 
 /* ============================================================
-   2. CUMPLEAÑEROS
+   3. 🎂 CUMPLEAÑEROS
+============================================================
+
+   SOLO NECESITAS PONER:
+
+   nombre
+
+   No necesitas escribir cargo ni fecha.
+
 ============================================================ */
+
 
 const cumpleanos = [
 
@@ -1959,36 +2222,357 @@ const cumpleanos = [
 
 
 
-/* ============================================================
-   3. CONFIGURACIÓN DEL CALENDARIO
-============================================================ */
+/****************************************************************
+ *
+ *             ⚠️ FIN DE LA ZONA DE EDICIÓN
+ *
+ *             DESDE AQUÍ NO NECESITAS MODIFICAR
+ *
+ ****************************************************************/
 
-const diasMes = 31;
+
+/* ============================================================
+   4. CONFIGURACIÓN AUTOMÁTICA DEL CALENDARIO
+============================================================ */
 
 
 /*
+   JavaScript calcula automáticamente:
 
-Octubre 2026 comienza jueves.
+   - Cuántos días tiene el mes.
+   - Qué día de la semana comienza.
+   - Los años bisiestos.
+*/
 
-Lunes = 0
-Martes = 1
-Miércoles = 2
-Jueves = 3
+
+const diasMes =
+    new Date(
+        revista.anio,
+        revista.mes,
+        0
+    ).getDate();
+
+
+/*
+   JavaScript:
+   Domingo = 0
+   Lunes = 1
+   Martes = 2
+   ...
+
+   Nosotros queremos:
+   Lunes = 0
+   Martes = 1
+   ...
 
 */
 
-const primerDia = 3;
+
+const primerDiaJavaScript =
+    new Date(
+        revista.anio,
+        revista.mes - 1,
+        1
+    ).getDay();
+
+
+const primerDia =
+    primerDiaJavaScript === 0
+        ? 6
+        : primerDiaJavaScript - 1;
 
 
 
 /* ============================================================
-   4. GENERAR CALENDARIO
+   5. CONFIGURAR TEXTOS AUTOMÁTICAMENTE
+============================================================ */
+
+function configurarRevista() {
+
+    document.title =
+        `Revista Digital Institucional - ${revista.nombreMes} ${revista.anio}`;
+
+
+    document.getElementById(
+        "header-title"
+    ).innerText =
+        `Revista Digital Institucional`;
+
+
+    document.getElementById(
+        "cover-edition"
+    ).innerText =
+        `Edición ${revista.nombreMes} ${revista.anio}`;
+
+
+    /*
+       Portada
+    */
+
+    const portadaTitulo =
+        revista.portada.titulo
+            .split("&");
+
+
+    document.getElementById(
+        "cover-title"
+    ).innerHTML =
+
+        portadaTitulo.length > 1
+
+        ?
+
+        `${portadaTitulo[0].trim()}
+         <br>
+         & ${portadaTitulo[1].trim()}`
+
+        :
+
+        revista.portada.titulo;
+
+
+    document.getElementById(
+        "cover-subtitle"
+    ).innerText =
+        revista.portada.subtitulo;
+
+
+    document.getElementById(
+        "cover-card-title"
+    ).innerText =
+        revista.portada.tarjetaTitulo;
+
+
+    document.getElementById(
+        "cover-card-description"
+    ).innerText =
+        revista.portada.tarjetaDescripcion;
+
+
+    /*
+       Editorial
+    */
+
+    document.getElementById(
+        "editorial-title"
+    ).innerText =
+        revista.editorial.titulo;
+
+
+    document.getElementById(
+        "editorial-introduction"
+    ).innerText =
+        revista.editorial.introduccion;
+
+
+    document.getElementById(
+        "editorial-quote"
+    ).innerText =
+        `“${revista.editorial.frase}”`;
+
+
+    document.getElementById(
+        "editorial-closing"
+    ).innerText =
+        revista.editorial.cierre;
+
+
+    /*
+       Calendario
+    */
+
+    document.getElementById(
+        "calendar-title"
+    ).innerText =
+        `Calendario ${revista.nombreMes} ${revista.anio}`;
+
+
+    /*
+       Cierre
+    */
+
+    document.getElementById(
+        "closing-title"
+    ).innerText =
+        revista.cierre.titulo;
+
+
+    document.getElementById(
+        "closing-text"
+    ).innerText =
+        revista.cierre.texto;
+
+
+    document.getElementById(
+        "closing-area"
+    ).innerText =
+        revista.cierre.area;
+
+
+    /*
+       Footer
+    */
+
+    document.getElementById(
+        "footer-text"
+    ).innerText =
+        `Revista Digital Institucional © ${revista.nombreMes} ${revista.anio}`;
+
+}
+
+
+
+/* ============================================================
+   6. FUNCIÓN PARA OBTENER NOMBRE COMPLETO DEL FLYER
+============================================================
+
+   Permite escribir:
+
+       "01-archivista"
+
+   en lugar de:
+
+       "01-archivista.jpg"
+
+============================================================ */
+
+
+const extensionesImagen = [
+
+    ".png",
+    ".jpg",
+    ".jpeg",
+    ".webp"
+
+];
+
+
+function obtenerRutaImagen(nombre) {
+
+    /*
+       Si ya tiene extensión,
+       la utiliza directamente.
+    */
+
+    if (
+        /\.(png|jpg|jpeg|webp)$/i.test(nombre)
+    ) {
+
+        return `assets/${nombre}`;
+
+    }
+
+
+    /*
+       Por defecto comenzamos
+       con PNG.
+
+       El sistema probará
+       automáticamente las demás.
+    */
+
+    return `assets/${nombre}.png`;
+
+}
+
+
+
+/* ============================================================
+   7. CARGAR IMAGEN PROBANDO EXTENSIONES
+============================================================ */
+
+function cargarImagenConExtension(
+
+    nombre,
+
+    callback
+
+) {
+
+    /*
+       Si el usuario ya escribió
+       una extensión.
+    */
+
+    if (
+        /\.(png|jpg|jpeg|webp)$/i.test(nombre)
+    ) {
+
+        callback(
+            `assets/${nombre}`
+        );
+
+        return;
+
+    }
+
+
+    let indice = 0;
+
+
+    function probarSiguiente() {
+
+        if (
+            indice >=
+            extensionesImagen.length
+        ) {
+
+            callback(null);
+
+            return;
+
+        }
+
+
+        const extension =
+            extensionesImagen[indice];
+
+
+        const ruta =
+            `assets/${nombre}${extension}`;
+
+
+        const img =
+            new Image();
+
+
+        img.onload = () => {
+
+            callback(ruta);
+
+        };
+
+
+        img.onerror = () => {
+
+            indice++;
+
+            probarSiguiente();
+
+        };
+
+
+        img.src = ruta;
+
+    }
+
+
+    probarSiguiente();
+
+}
+
+
+
+/* ============================================================
+   8. GENERAR CALENDARIO
 ============================================================ */
 
 function generarCalendario() {
 
     const calendar =
-        document.getElementById("calendar");
+        document.getElementById(
+            "calendar"
+        );
 
 
     calendar.innerHTML = "";
@@ -2012,18 +2596,24 @@ function generarCalendario() {
         const header =
             document.createElement("div");
 
+
         header.className =
             "day-header";
 
+
         header.innerText =
             dia;
+
 
         calendar.appendChild(header);
 
     });
 
 
-    // Espacios iniciales
+    /*
+       Espacios antes
+       del primer día.
+    */
 
     for (
         let i = 0;
@@ -2034,15 +2624,19 @@ function generarCalendario() {
         const empty =
             document.createElement("div");
 
+
         empty.className =
             "day-cell empty";
+
 
         calendar.appendChild(empty);
 
     }
 
 
-    // Días
+    /*
+       Generar días
+    */
 
     for (
         let dia = 1;
@@ -2051,7 +2645,10 @@ function generarCalendario() {
     ) {
 
         const numero =
-            String(dia).padStart(2, "0");
+            String(dia).padStart(
+                2,
+                "0"
+            );
 
 
         const eventosDia =
@@ -2072,8 +2669,10 @@ function generarCalendario() {
         const number =
             document.createElement("span");
 
+
         number.className =
             "day-number";
+
 
         number.innerText =
             numero;
@@ -2082,7 +2681,9 @@ function generarCalendario() {
         cell.appendChild(number);
 
 
-        if (eventosDia.length > 0) {
+        if (
+            eventosDia.length > 0
+        ) {
 
             cell.classList.add(
                 "has-event"
@@ -2125,8 +2726,12 @@ function generarCalendario() {
 
             const cantidadFlyers =
                 eventosDia.reduce(
-                    (total, evento) =>
-                        total + evento.flyers.length,
+                    (
+                        total,
+                        evento
+                    ) =>
+                        total +
+                        evento.flyers.length,
                     0
                 );
 
@@ -2138,7 +2743,9 @@ function generarCalendario() {
                 badge.innerText =
                     "Ver fecha";
 
-            } else {
+            }
+
+            else {
 
                 badge.innerText =
                     `${cantidadFlyers} flyers`;
@@ -2146,7 +2753,9 @@ function generarCalendario() {
             }
 
 
-            cell.appendChild(badge);
+            cell.appendChild(
+                badge
+            );
 
 
             cell.onclick =
@@ -2158,7 +2767,9 @@ function generarCalendario() {
         }
 
 
-        calendar.appendChild(cell);
+        calendar.appendChild(
+            cell
+        );
 
     }
 
@@ -2167,10 +2778,12 @@ function generarCalendario() {
 
 
 /* ============================================================
-   5. ABRIR TODOS LOS FLYERS DE UN DÍA
+   9. ABRIR EVENTOS DE UN DÍA
 ============================================================ */
 
-function abrirEventosDelDia(dia) {
+function abrirEventosDelDia(
+    dia
+) {
 
     const eventosDia =
         eventos.filter(
@@ -2183,11 +2796,6 @@ function abrirEventosDelDia(dia) {
         eventosDia.length === 0
     ) return;
 
-
-    /*
-       Unimos todos los flyers
-       correspondientes a ese día.
-    */
 
     const todosLosFlyers =
         eventosDia.flatMap(
@@ -2209,7 +2817,9 @@ function abrirEventosDelDia(dia) {
 
         todosLosFlyers,
 
-        titulos.join(" • ")
+        titulos.join(
+            " • "
+        )
 
     );
 
@@ -2218,7 +2828,7 @@ function abrirEventosDelDia(dia) {
 
 
 /* ============================================================
-   6. GENERAR PÁGINA DE HOMENAJEADOS
+   10. GENERAR HOMENAJEADOS
 ============================================================ */
 
 function generarHomenajeados() {
@@ -2240,16 +2850,44 @@ function generarHomenajeados() {
         );
 
 
+    if (
+        reconocimientos.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div
+                style="
+                    color:var(--text-muted);
+                    font-size:12px;
+                    padding:15px;
+                "
+            >
+
+                No hay reconocimientos registrados
+                para este mes.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
     reconocimientos.forEach(
         evento => {
 
-
-            if (!evento.persona)
-                return;
+            if (
+                !evento.persona
+            ) return;
 
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
@@ -2286,8 +2924,14 @@ function generarHomenajeados() {
                     </h4>
 
                     <p>
-                        ${evento.cargo}
-                        · ${evento.dia} Oct
+
+                        ${evento.cargo || "Reconocimiento"}
+
+                        ·
+
+                        ${evento.dia}
+                        ${revista.nombreMes.substring(0,3)}
+
                     </p>
 
                 </div>
@@ -2295,7 +2939,9 @@ function generarHomenajeados() {
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
@@ -2305,7 +2951,7 @@ function generarHomenajeados() {
 
 
 /* ============================================================
-   7. GENERAR CUMPLEAÑEROS
+   11. GENERAR CUMPLEAÑOS
 ============================================================ */
 
 function generarCumpleanos() {
@@ -2319,11 +2965,39 @@ function generarCumpleanos() {
     container.innerHTML = "";
 
 
+    if (
+        cumpleanos.length === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div
+                style="
+                    color:var(--text-muted);
+                    font-size:12px;
+                    padding:15px;
+                "
+            >
+
+                No hay cumpleaños registrados
+                para este mes.
+
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
     cumpleanos.forEach(
         persona => {
 
             const card =
-                document.createElement("div");
+                document.createElement(
+                    "div"
+                );
 
 
             card.className =
@@ -2368,7 +3042,9 @@ function generarCumpleanos() {
             `;
 
 
-            container.appendChild(card);
+            container.appendChild(
+                card
+            );
 
         }
     );
@@ -2378,7 +3054,7 @@ function generarCumpleanos() {
 
 
 /* ============================================================
-   8. GENERAR GALERÍA
+   12. GENERAR GALERÍA
 ============================================================ */
 
 function generarGaleria() {
@@ -2392,20 +3068,22 @@ function generarGaleria() {
     container.innerHTML = "";
 
 
-    /*
-       Cada flyer se convierte
-       automáticamente en una tarjeta.
-    */
+    let contador = 0;
 
 
     eventos.forEach(
         evento => {
 
             evento.flyers.forEach(
-                (flyer, index) => {
+                (flyer) => {
+
+                    contador++;
+
 
                     const item =
-                        document.createElement("div");
+                        document.createElement(
+                            "div"
+                        );
 
 
                     item.className =
@@ -2421,29 +3099,107 @@ function generarGaleria() {
                     };
 
 
-                    item.innerHTML = `
-
-                        <div class="gallery-thumb">
-
-                            <img
-                                src="assets/${flyer}"
-                                alt="${evento.titulo}"
-                            >
-
-                        </div>
+                    const thumb =
+                        document.createElement(
+                            "div"
+                        );
 
 
-                        <div class="gallery-caption">
-
-                            ${evento.dia} Oct -
-                            ${evento.titulo}
-
-                        </div>
-
-                    `;
+                    thumb.className =
+                        "gallery-thumb";
 
 
-                    container.appendChild(item);
+                    const img =
+                        document.createElement(
+                            "img"
+                        );
+
+
+                    img.alt =
+                        evento.titulo;
+
+
+                    thumb.appendChild(
+                        img
+                    );
+
+
+                    item.appendChild(
+                        thumb
+                    );
+
+
+                    const caption =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    caption.className =
+                        "gallery-caption";
+
+
+                    caption.innerText =
+
+                        `${evento.dia}
+                         ${revista.nombreMes.substring(0,3)}
+                         -
+                         ${evento.titulo}`;
+
+
+                    item.appendChild(
+                        caption
+                    );
+
+
+                    container.appendChild(
+                        item
+                    );
+
+
+                    /*
+                       Buscar automáticamente
+                       PNG / JPG / JPEG / WEBP
+                    */
+
+                    cargarImagenConExtension(
+
+                        flyer,
+
+                        ruta => {
+
+                            if (ruta) {
+
+                                img.src =
+                                    ruta;
+
+                            }
+
+                            else {
+
+                                thumb.innerHTML = `
+
+                                    <div class="image-error">
+
+                                        <i class="fa-regular fa-image"></i>
+
+                                        <span>
+                                            Imagen no encontrada
+                                        </span>
+
+                                        <small>
+                                            ${flyer}
+                                        </small>
+
+                                    </div>
+
+                                `;
+
+                            }
+
+                        }
+
+                    );
 
                 }
             );
@@ -2451,12 +3207,52 @@ function generarGaleria() {
         }
     );
 
+
+    /*
+       Si no hay flyers
+    */
+
+    if (
+        contador === 0
+    ) {
+
+        container.innerHTML = `
+
+            <div
+                style="
+                    grid-column:1/-1;
+                    text-align:center;
+                    padding:30px;
+                    color:var(--text-muted);
+                "
+            >
+
+                <i
+                    class="fa-regular fa-images"
+                    style="
+                        font-size:35px;
+                        color:var(--primary-blue);
+                        margin-bottom:10px;
+                    "
+                ></i>
+
+                <br>
+
+                No hay flyers registrados
+                para este mes.
+
+            </div>
+
+        `;
+
+    }
+
 }
 
 
 
 /* ============================================================
-   9. MODAL DE FLYERS
+   13. MODAL DE FLYERS
 ============================================================ */
 
 let currentFlyers = [];
@@ -2464,18 +3260,23 @@ let currentFlyers = [];
 let currentFlyerIndex = 0;
 
 
-
 function openFlyerModal(
+
     day,
+
     flyers,
+
     title
+
 ) {
 
     if (
         !Array.isArray(flyers)
     ) {
 
-        flyers = [flyers];
+        flyers = [
+            flyers
+        ];
 
     }
 
@@ -2491,13 +3292,17 @@ function openFlyerModal(
     document.getElementById(
         "modal-title"
     ).innerText =
+
         title ||
-        `Día ${day} de Octubre`;
+
+        `Día ${day} de ${revista.nombreMes}`;
 
 
     document.getElementById(
         "flyer-modal"
-    ).classList.add("active");
+    ).classList.add(
+        "active"
+    );
 
 
     showCurrentFlyer();
@@ -2507,7 +3312,7 @@ function openFlyerModal(
 
 
 /* ============================================================
-   10. MOSTRAR FLYER
+   14. MOSTRAR FLYER ACTUAL
 ============================================================ */
 
 function showCurrentFlyer() {
@@ -2542,22 +3347,77 @@ function showCurrentFlyer() {
         ];
 
 
-    container.innerHTML = "";
+    container.innerHTML = `
+
+        <div class="image-error">
+
+            <i class="fa-solid fa-spinner fa-spin"></i>
+
+            <span>
+                Cargando imagen...
+            </span>
+
+        </div>
+
+    `;
 
 
-    const img =
-        document.createElement("img");
+    cargarImagenConExtension(
+
+        flyer,
+
+        ruta => {
+
+            if (ruta) {
+
+                container.innerHTML = "";
 
 
-    img.src =
-        `assets/${flyer}`;
+                const img =
+                    document.createElement(
+                        "img"
+                    );
 
 
-    img.alt =
-        "Flyer institucional";
+                img.src =
+                    ruta;
 
 
-    container.appendChild(img);
+                img.alt =
+                    "Flyer institucional";
+
+
+                container.appendChild(
+                    img
+                );
+
+            }
+
+            else {
+
+                container.innerHTML = `
+
+                    <div class="image-error">
+
+                        <i class="fa-regular fa-image"></i>
+
+                        <span>
+                            No se encontró el flyer
+                        </span>
+
+                        <small>
+                            ${flyer}
+                        </small>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+    );
 
 
     counter.innerText =
@@ -2579,7 +3439,7 @@ function showCurrentFlyer() {
 
 
 /* ============================================================
-   11. SIGUIENTE FLYER
+   15. SIGUIENTE FLYER
 ============================================================ */
 
 function nextFlyer() {
@@ -2600,7 +3460,7 @@ function nextFlyer() {
 
 
 /* ============================================================
-   12. FLYER ANTERIOR
+   16. FLYER ANTERIOR
 ============================================================ */
 
 function previousFlyer() {
@@ -2620,7 +3480,7 @@ function previousFlyer() {
 
 
 /* ============================================================
-   13. CERRAR MODAL
+   17. CERRAR MODAL
 ============================================================ */
 
 function closeModal() {
@@ -2638,7 +3498,7 @@ function closeModal() {
 
 
 /* ============================================================
-   14. CERRAR AL HACER CLICK FUERA
+   18. CERRAR MODAL AL HACER CLICK FUERA
 ============================================================ */
 
 function closeModalOnOverlay(
@@ -2659,13 +3519,12 @@ function closeModalOnOverlay(
 
 
 /* ============================================================
-   15. NAVEGACIÓN DE LA REVISTA
+   19. NAVEGACIÓN DE LA REVISTA
 ============================================================ */
 
 let currentPage = 1;
 
 const totalPages = 6;
-
 
 
 function updatePageVisibility() {
@@ -2690,7 +3549,9 @@ function updatePageVisibility() {
                 "active"
             );
 
-        } else {
+        }
+
+        else {
 
             page.classList.remove(
                 "active"
@@ -2755,14 +3616,17 @@ function prevPage() {
 
 
 
-function goToPage(page) {
+function goToPage(
+    page
+) {
 
     if (
         page >= 1 &&
         page <= totalPages
     ) {
 
-        currentPage = page;
+        currentPage =
+            page;
 
         updatePageVisibility();
 
@@ -2773,23 +3637,23 @@ function goToPage(page) {
 
 
 /* ============================================================
-   16. TECLADO
+   20. TECLADO
 ============================================================ */
 
 document.addEventListener(
     "keydown",
     event => {
 
-        /*
-           Si el modal está abierto,
-           las flechas cambian flyers.
-        */
-
         const modal =
             document.getElementById(
                 "flyer-modal"
             );
 
+
+        /*
+           Si el modal está abierto:
+           las flechas cambian flyers.
+        */
 
         if (
             modal.classList.contains(
@@ -2833,7 +3697,7 @@ document.addEventListener(
 
 
         /*
-           Si el modal está cerrado,
+           Si el modal está cerrado:
            las flechas cambian páginas.
         */
 
@@ -2862,7 +3726,7 @@ document.addEventListener(
 
 
 /* ============================================================
-   17. CONFETTI
+   21. CONFETTI
 ============================================================ */
 
 function triggerConfetti() {
@@ -2891,7 +3755,7 @@ function triggerConfetti() {
 
 
 /* ============================================================
-   18. SWIPE MÓVIL
+   22. SWIPE EN CELULAR
 ============================================================ */
 
 let touchStartX = 0;
@@ -2951,12 +3815,14 @@ bookElement.addEventListener(
 
 
 /* ============================================================
-   19. INICIALIZAR REVISTA
+   23. INICIALIZAR REVISTA
 ============================================================ */
 
 window.addEventListener(
     "load",
     () => {
+
+        configurarRevista();
 
         generarCalendario();
 
