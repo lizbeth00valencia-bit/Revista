@@ -2699,6 +2699,15 @@ function cargarImagenConExtension(
     */
 
 
+    // Las imágenes guardadas en Supabase ya llegan con su URL pública.
+    if (/^https?:\/\//i.test(nombre)) {
+        const img = new Image();
+        img.onload = () => callback(nombre);
+        img.onerror = () => callback(null);
+        img.src = nombre;
+        return;
+    }
+
     if (
         /\.(png|jpg|jpeg|webp)$/i.test(nombre)
     ) {
