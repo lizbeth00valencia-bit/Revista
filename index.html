@@ -4271,7 +4271,7 @@ async function cargarEventosSupabase() {
     console.info("Revista: eventos cargados", eventos.length);
   } catch (error) {
     console.error("No fue posible cargar los eventos de Supabase:", error);
-    eventos = eventosIniciales.map(evento => ({ ...evento, flyers: [...(evento.flyers || [])] }));
+    eventos = (revista.mes === 10 && revista.anio === 2026) ? eventosIniciales.map(evento => ({ ...evento, flyers: [...(evento.flyers || [])] })) : [];
   }
 }
 
