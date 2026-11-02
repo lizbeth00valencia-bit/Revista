@@ -4315,6 +4315,7 @@ function aplicarEdicionRevista(mes,anio){
   const nombres=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
   revista.mes=Number(mes);revista.anio=Number(anio);revista.nombreMes=nombres[revista.mes-1];revista.nombreMesMayusculas=revista.nombreMes.toUpperCase();
   revista.carpetaMes=revista.nombreMes.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+  carpetaMes=revista.carpetaMes;
   diasMes=new Date(revista.anio,revista.mes,0).getDate();
   const diaSemana=new Date(revista.anio,revista.mes-1,1).getDay();primerDia=diaSemana===0?6:diaSemana-1;
   if(revista.editorial&&revista.editorial.titulo)revista.editorial.titulo=revista.editorial.titulo.replace(/en [A-Za-zÁÉÍÓÚáéíóú]+$/,"en "+revista.nombreMes);
