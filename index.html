@@ -1231,6 +1231,24 @@ body {
 
 }
 
+
+/* PANEL PRIVADO DE ADMINISTRACIÓN */
+.admin-access-btn{background:#fff;color:var(--dark-blue);border:1px solid #d8e3ef;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer}
+.admin-overlay{display:none;position:fixed;inset:0;background:rgba(12,31,55,.68);z-index:10000;overflow-y:auto;padding:24px 14px}
+.admin-overlay.visible{display:block}.admin-panel{background:#fff;width:min(920px,100%);margin:24px auto;border-radius:18px;padding:24px;box-shadow:0 18px 60px rgba(0,0,0,.25);color:#24364b}
+.admin-panel-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:18px}.admin-panel h2{margin:0;color:#174a7e}
+.admin-close{border:0;background:#eef3f8;border-radius:50%;width:38px;height:38px;font-size:22px;cursor:pointer}
+.admin-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.admin-field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+.admin-field.full{grid-column:1/-1}.admin-field label{font-size:13px;font-weight:700;color:#38516b}
+.admin-field input,.admin-field select,.admin-field textarea{width:100%;padding:11px 12px;border:1px solid #ccd7e2;border-radius:9px;font:inherit;box-sizing:border-box;background:white}
+.admin-field textarea{min-height:84px;resize:vertical}.admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.admin-primary,.admin-secondary,.admin-danger{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
+.admin-primary{background:#155b91;color:white}.admin-secondary{background:#edf3f8;color:#234766}.admin-danger{background:#fff0f0;color:#a52b2b}
+.admin-status{padding:10px 12px;border-radius:9px;background:#eef5fb;margin:12px 0;color:#244d70;font-size:14px}
+.admin-list{margin-top:22px;border-top:1px solid #e3eaf0;padding-top:16px}.admin-event-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #edf1f5}
+.admin-event-row strong{display:block}.admin-event-row small{color:#63778b}.admin-row-actions{display:flex;gap:7px;flex-shrink:0}
+.admin-row-actions button{padding:7px 10px;border-radius:7px;border:0;cursor:pointer}
+@media(max-width:620px){.admin-form-grid{grid-template-columns:1fr}.admin-panel{padding:17px;margin:8px auto}.admin-event-row{align-items:flex-start;flex-direction:column}.admin-row-actions{width:100%}.admin-row-actions button{flex:1}.header-controls{flex-wrap:wrap}}
 </style>
 </head>
 
@@ -1267,6 +1285,8 @@ body {
 
         </button>
 
+
+        <button class="admin-access-btn" onclick="abrirAdministracion()"><i class="fa-solid fa-lock"></i> Administrar</button>
 
         <button
             class="btn-header"
@@ -1849,6 +1869,27 @@ body {
 
 
 
+
+<div class="admin-overlay" id="admin-overlay" onclick="cerrarAdminSiFondo(event)">
+<section class="admin-panel" role="dialog" aria-modal="true" aria-labelledby="admin-title">
+<div class="admin-panel-head"><h2 id="admin-title">Administración de la revista</h2><button class="admin-close" type="button" onclick="cerrarAdministracion()" aria-label="Cerrar">×</button></div>
+<div id="admin-login"><p>Ingresa con el correo y la contraseña de la cuenta administradora de la revista.</p>
+<div class="admin-field"><label for="admin-email">Correo electrónico</label><input id="admin-email" type="email" autocomplete="username" placeholder="Tu correo"></div>
+<div class="admin-field"><label for="admin-password">Contraseña</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="Tu contraseña"></div>
+<div class="admin-actions"><button class="admin-primary" type="button" onclick="iniciarSesionAdmin()">Ingresar</button><button class="admin-secondary" type="button" onclick="solicitarRecuperacionAdmin()">Recuperar contraseña</button></div></div>
+<div id="admin-workspace" hidden><div class="admin-status" id="admin-status">Sesión iniciada.</div>
+<div class="admin-form-grid">
+<div class="admin-field"><label for="admin-fecha">Fecha</label><input id="admin-fecha" type="date"></div>
+<div class="admin-field"><label for="admin-categoria">Sección</label><select id="admin-categoria"><option value="conmemoracion">Conmemoración</option><option value="reconocimiento">Reconocimiento</option><option value="cumpleanos">Cumpleaños</option><option value="actividad">Actividad</option><option value="educacion">Educación continuada</option><option value="celebracion">Celebración</option></select></div>
+<div class="admin-field full"><label for="admin-titulo-evento">Título</label><input id="admin-titulo-evento" type="text" maxlength="150" placeholder="Nombre de la actividad o reconocimiento"></div>
+<div class="admin-field full"><label for="admin-descripcion">Descripción</label><textarea id="admin-descripcion" maxlength="1000" placeholder="Descripción breve"></textarea></div>
+<div class="admin-field"><label for="admin-persona">Persona (opcional)</label><input id="admin-persona" type="text" maxlength="150"></div>
+<div class="admin-field"><label for="admin-cargo">Cargo (opcional)</label><input id="admin-cargo" type="text" maxlength="120"></div>
+<div class="admin-field full"><label for="admin-imagen">Imagen o volante (opcional)</label><input id="admin-imagen" type="file" accept="image/*"><small>Se guardará en el almacenamiento de la revista.</small></div>
+</div>
+<div class="admin-actions"><button class="admin-primary" type="button" onclick="guardarEventoAdmin()">Guardar publicación</button><button class="admin-secondary" type="button" onclick="limpiarFormularioAdmin()">Limpiar</button><button class="admin-secondary" type="button" onclick="cerrarSesionAdmin()">Cerrar sesión</button></div>
+<div class="admin-list"><h3>Publicaciones de esta edición</h3><div id="admin-event-list">Cargando publicaciones…</div></div></div>
+</section></div>
 <footer class="app-footer">
 
     <span id="footer-text">
@@ -4258,6 +4299,27 @@ window.addEventListener(
 
     }
 );
+
+
+/* PANEL PRIVADO: AUTENTICACIÓN Y GESTIÓN DE PUBLICACIONES */
+const ADMIN_USER_ID="774846a1-4083-48ad-a19e-8a97b8687ada";
+let eventoEditandoId=null;
+let imagenActualUrl="";
+function mostrarEstadoAdmin(mensaje,esError=false){const n=document.getElementById("admin-status");if(n){n.textContent=mensaje;n.style.background=esError?"#fff0f0":"#eef5fb";n.style.color=esError?"#9d2424":"#244d70";}}
+function abrirAdministracion(){document.getElementById("admin-overlay").classList.add("visible");comprobarSesionAdmin();}
+function cerrarAdministracion(){document.getElementById("admin-overlay").classList.remove("visible");}
+function cerrarAdminSiFondo(e){if(e.target.id==="admin-overlay")cerrarAdministracion();}
+async function comprobarSesionAdmin(){const {data:{session}}=await supabaseClient.auth.getSession();const ok=!!session&&session.user.id===ADMIN_USER_ID;document.getElementById("admin-login").hidden=ok;document.getElementById("admin-workspace").hidden=!ok;if(session&&!ok){await supabaseClient.auth.signOut();mostrarEstadoAdmin("Esta cuenta no tiene permisos de administración.",true);}if(ok)await listarEventosAdmin();}
+async function iniciarSesionAdmin(){const email=document.getElementById("admin-email").value.trim();const password=document.getElementById("admin-password").value;if(!email||!password){alert("Escribe tu correo y contraseña.");return;}const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){alert("No fue posible iniciar sesión. Verifica el correo y la contraseña.");console.error(error);return;}if(data.user.id!==ADMIN_USER_ID){await supabaseClient.auth.signOut();alert("Esta cuenta no está autorizada para administrar la revista.");return;}await comprobarSesionAdmin();}
+async function solicitarRecuperacionAdmin(){const email=document.getElementById("admin-email").value.trim();if(!email){alert("Escribe primero el correo de tu cuenta administradora.");return;}const redirectTo=window.location.origin+window.location.pathname;const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});if(error){alert("No se pudo enviar el correo de recuperación. Intenta nuevamente.");console.error(error);return;}alert("Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña.");}
+async function cerrarSesionAdmin(){await supabaseClient.auth.signOut();document.getElementById("admin-workspace").hidden=true;document.getElementById("admin-login").hidden=false;}
+function limpiarFormularioAdmin(){eventoEditandoId=null;imagenActualUrl="";["admin-fecha","admin-titulo-evento","admin-descripcion","admin-persona","admin-cargo","admin-imagen"].forEach(id=>document.getElementById(id).value="");document.getElementById("admin-categoria").value="conmemoracion";document.querySelector('#admin-workspace .admin-primary').textContent="Guardar publicación";}
+async function listarEventosAdmin(){const {data,error}=await supabaseClient.from("eventos").select("id,fecha,titulo,categoria,descripcion,imagen_url,persona,cargo").eq("mes",revista.mes).eq("anio",revista.anio).order("fecha",{ascending:true});const c=document.getElementById("admin-event-list");if(error){c.textContent="No se pudieron consultar las publicaciones. Revisa los permisos de la tabla eventos.";console.error(error);return;}if(!data.length){c.textContent="Aún no hay publicaciones guardadas para esta edición.";window.eventosAdminCache=[];return;}window.eventosAdminCache=data;c.innerHTML=data.map(f=>'<div class="admin-event-row"><div><strong>'+escaparHtmlAdmin(f.titulo||"Sin título")+'</strong><small>'+escaparHtmlAdmin(f.fecha||"")+' · '+escaparHtmlAdmin(f.categoria||"")+'</small></div><div class="admin-row-actions"><button class="admin-secondary" onclick="editarEventoAdmin('+Number(f.id)+')">Editar</button><button class="admin-danger" onclick="eliminarEventoAdmin('+Number(f.id)+')">Eliminar</button></div></div>').join("");}
+function escaparHtmlAdmin(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function editarEventoAdmin(id){const f=(window.eventosAdminCache||[]).find(x=>Number(x.id)===Number(id));if(!f)return;eventoEditandoId=f.id;imagenActualUrl=f.imagen_url||"";document.getElementById("admin-fecha").value=f.fecha||"";document.getElementById("admin-categoria").value=f.categoria||"actividad";document.getElementById("admin-titulo-evento").value=f.titulo||"";document.getElementById("admin-descripcion").value=f.descripcion||"";document.getElementById("admin-persona").value=f.persona||"";document.getElementById("admin-cargo").value=f.cargo||"";document.getElementById("admin-imagen").value="";document.querySelector('#admin-workspace .admin-primary').textContent="Actualizar publicación";mostrarEstadoAdmin("Editando: "+(f.titulo||"publicación"));document.getElementById("admin-fecha").scrollIntoView({behavior:"smooth",block:"center"});}
+async function guardarEventoAdmin(){const fecha=document.getElementById("admin-fecha").value;const titulo=document.getElementById("admin-titulo-evento").value.trim();if(!fecha||!titulo){alert("La fecha y el título son obligatorios.");return;}const {data:{session}}=await supabaseClient.auth.getSession();if(!session||session.user.id!==ADMIN_USER_ID){alert("Tu sesión no está autorizada. Ingresa nuevamente.");return;}const archivo=document.getElementById("admin-imagen").files[0];let imagenUrl=imagenActualUrl;if(archivo){if(!archivo.type.startsWith("image/")){alert("Selecciona un archivo de imagen.");return;}const ext=(archivo.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const ruta=fecha.slice(0,4)+"/"+fecha.slice(5,7)+"/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ext;const {error:upError}=await supabaseClient.storage.from("revista-vita").upload(ruta,archivo,{contentType:archivo.type,upsert:false});if(upError){alert("No se pudo subir la imagen. Revisa los permisos del almacenamiento.");console.error(upError);return;}imagenUrl=supabaseClient.storage.from("revista-vita").getPublicUrl(ruta).data.publicUrl;}const registro={fecha,titulo,categoria:document.getElementById("admin-categoria").value,descripcion:document.getElementById("admin-descripcion").value.trim(),imagen_url:imagenUrl||null,mes:Number(fecha.slice(5,7)),anio:Number(fecha.slice(0,4)),persona:document.getElementById("admin-persona").value.trim()||null,cargo:document.getElementById("admin-cargo").value.trim()||null};let result;if(eventoEditandoId)result=await supabaseClient.from("eventos").update(registro).eq("id",eventoEditandoId);else result=await supabaseClient.from("eventos").insert(registro);if(result.error){alert("No se pudo guardar. Revisa los permisos y las columnas de la tabla.");console.error(result.error);return;}revista.mes=registro.mes;revista.anio=registro.anio;await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();limpiarFormularioAdmin();await listarEventosAdmin();mostrarEstadoAdmin("Publicación guardada correctamente.");}
+async function eliminarEventoAdmin(id){if(!confirm("¿Seguro que deseas eliminar esta publicación?"))return;const {error}=await supabaseClient.from("eventos").delete().eq("id",id);if(error){alert("No se pudo eliminar. Revisa los permisos de la tabla.");console.error(error);return;}await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();await listarEventosAdmin();mostrarEstadoAdmin("Publicación eliminada.");}
+supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==="PASSWORD_RECOVERY"){const nueva=prompt("Escribe tu nueva contraseña (mínimo 8 caracteres):");if(nueva&&nueva.length>=8){supabaseClient.auth.updateUser({password:nueva}).then(({error})=>alert(error?"No se pudo actualizar la contraseña.":"Contraseña actualizada. Ya puedes iniciar sesión."));}else if(nueva!==null)alert("La contraseña debe tener al menos 8 caracteres.");}if(event==="SIGNED_OUT"){const w=document.getElementById("admin-workspace");const l=document.getElementById("admin-login");if(w&&l){w.hidden=true;l.hidden=false;}}});
 
 </script>
 
