@@ -21,6 +21,7 @@
 ============================================================ -->
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <!-- ============================================================
@@ -2010,7 +2011,7 @@ const revista = {
 ============================================================ */
 
 
-const eventos = [
+let eventos = [
 
     /* ========================================================
        01 OCTUBRE
@@ -2396,6 +2397,10 @@ const eventos = [
     }
 
 ];
+
+// Copia de respaldo para mostrar la edición de ejemplo si aún no hay datos en Supabase.
+const eventosIniciales = eventos.map(evento => ({ ...evento, flyers: [...(evento.flyers || [])] }));
+
 
 
 
@@ -4174,13 +4179,61 @@ bookElement.addEventListener(
 
 
 
+
+/* ============================================================
+   CONEXIÓN CON SUPABASE
+============================================================ */
+const SUPABASE_URL = "https://ivudxcloygqqkzvsdsx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_nturbKm8_8v1Eb0bsXKUBg_R9e6t2YM";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+async function cargarEventosSupabase() {
+  try {
+    const { data, error } = await supabaseClient
+      .from("eventos")
+      .select("id, fecha, titulo, categoria, descripcion, imagen_url, mes, anio, persona, cargo")
+      .eq("mes", revista.mes)
+      .eq("anio", revista.anio)
+      .order("fecha", { ascending: true });
+
+    if (error) throw error;
+
+    if (Array.isArray(data) && data.length > 0) {
+      eventos = data.map(fila => {
+        const fecha = String(fila.fecha || "");
+        const dia = fecha.length >= 10 ? fecha.slice(8, 10) : "01";
+        return {
+          id: fila.id,
+          dia,
+          titulo: fila.titulo || "Actividad institucional",
+          descripcion: fila.descripcion || "",
+          tipo: fila.categoria || "actividad",
+          persona: fila.persona || "",
+          cargo: fila.cargo || "",
+          inicial: (fila.persona || fila.titulo || "★").trim().charAt(0).toUpperCase(),
+          flyers: fila.imagen_url ? [fila.imagen_url] : []
+        };
+      });
+    } else {
+      eventos = eventosIniciales.map(evento => ({ ...evento, flyers: [...(evento.flyers || [])] }));
+    }
+    console.info("Revista: eventos cargados", eventos.length);
+  } catch (error) {
+    console.error("No fue posible cargar los eventos de Supabase:", error);
+    eventos = eventosIniciales.map(evento => ({ ...evento, flyers: [...(evento.flyers || [])] }));
+  }
+}
+
+
 /* ============================================================
    25. INICIALIZAR REVISTA
 ============================================================ */
 
 window.addEventListener(
     "load",
-    () => {
+    async () => {
+
+        await cargarEventosSupabase();
 
         configurarRevista();
 
