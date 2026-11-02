@@ -21,6 +21,7 @@
 ============================================================ -->
 
 <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 
 <!-- ============================================================
@@ -1230,6 +1231,37 @@ body {
 
 }
 
+
+/* PANEL PRIVADO DE ADMINISTRACIÓN */
+.admin-launch { background:var(--primary-blue); color:#fff; border:0; padding:9px 16px; border-radius:20px; font-weight:700; cursor:pointer; font-family:inherit; }
+.admin-overlay { display:none; position:fixed; inset:0; z-index:1000; background:rgba(0,25,55,.62); padding:18px; overflow-y:auto; }
+.admin-overlay.active { display:flex; align-items:flex-start; justify-content:center; }
+.admin-panel { background:#fff; width:min(920px,100%); margin:20px auto; border-radius:18px; box-shadow:0 20px 60px rgba(0,0,0,.25); padding:24px; }
+.admin-top { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:18px; }
+.admin-top h2 { color:var(--dark-blue); font-size:22px; }
+.admin-close { border:0; background:#edf3fa; border-radius:50%; width:38px; height:38px; cursor:pointer; font-size:20px; }
+.admin-login { max-width:420px; margin:25px auto; }
+.admin-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; }
+.admin-field { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+.admin-field.full { grid-column:1/-1; }
+.admin-field label { color:#34495e; font-size:13px; font-weight:700; }
+.admin-field input,.admin-field select,.admin-field textarea { width:100%; padding:11px 12px; border:1px solid #d8e2ee; border-radius:9px; font:inherit; font-size:14px; background:#fff; }
+.admin-field textarea { min-height:78px; resize:vertical; }
+.admin-actions { display:flex; flex-wrap:wrap; gap:9px; margin:12px 0 20px; }
+.admin-primary,.admin-secondary,.admin-danger { border:0; border-radius:9px; padding:10px 15px; cursor:pointer; font-weight:700; font-family:inherit; }
+.admin-primary { background:var(--primary-blue); color:#fff; }
+.admin-secondary { background:#eaf2fb; color:var(--dark-blue); }
+.admin-danger { background:#fff0f0; color:#b42318; }
+.admin-status { padding:10px 12px; border-radius:8px; background:#f0f6fc; color:#31506d; font-size:13px; margin:10px 0; }
+.admin-event-list { display:grid; gap:9px; }
+.admin-event { border:1px solid #e2eaf2; border-radius:10px; padding:12px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.admin-event strong { display:block; color:#243b53; font-size:14px; }
+.admin-event small { color:#68798b; }
+.admin-event-actions { display:flex; gap:6px; flex-shrink:0; }
+.admin-event-actions button { border:0; border-radius:7px; padding:7px 9px; cursor:pointer; }
+.admin-hint { font-size:12px; color:#718096; line-height:1.5; }
+@media(max-width:650px) { .admin-grid { grid-template-columns:1fr; } .admin-field.full { grid-column:auto; } .admin-panel { padding:17px; margin:5px auto; } .admin-top h2 { font-size:18px; } .admin-event { align-items:flex-start; flex-direction:column; } .header-controls { gap:6px; } .admin-launch { padding:8px 10px; font-size:12px; } }
+
 </style>
 </head>
 
@@ -1266,6 +1298,8 @@ body {
 
         </button>
 
+
+        <button class="admin-launch" onclick="abrirPanelAdmin()"><i class="fa-solid fa-lock"></i> Administrar</button>
 
         <button
             class="btn-header"
@@ -1759,6 +1793,47 @@ body {
 
 
 
+
+<!-- PANEL PRIVADO: SOLO ACCESO AUTORIZADO -->
+<div class="admin-overlay" id="admin-overlay" onclick="cerrarPanelAdminFondo(event)">
+  <section class="admin-panel">
+    <div class="admin-top">
+      <h2><i class="fa-solid fa-shield-halved"></i> Administración de la revista</h2>
+      <button class="admin-close" onclick="cerrarPanelAdmin()" aria-label="Cerrar">×</button>
+    </div>
+    <div id="admin-login" class="admin-login">
+      <p style="margin-bottom:14px;color:#526579">Ingresa con el correo y la contraseña del usuario administrador de Supabase.</p>
+      <div class="admin-field"><label for="admin-email">Correo electrónico</label><input id="admin-email" type="email" autocomplete="username" placeholder="Correo de administrador"></div>
+      <div class="admin-field"><label for="admin-password">Contraseña</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="Contraseña"></div>
+      <div class="admin-actions"><button class="admin-primary" onclick="iniciarSesionAdmin()">Ingresar</button></div>
+      <p id="admin-login-status" class="admin-status" role="status">El panel es privado. No hay opción de registro público.</p>
+    </div>
+    <div id="admin-content" hidden>
+      <div class="admin-top"><p id="admin-user-label" class="admin-hint">Sesión administrativa activa</p><button class="admin-secondary" onclick="cerrarSesionAdmin()">Cerrar sesión</button></div>
+      <h3 style="color:var(--dark-blue);margin:14px 0">Agregar o editar contenido</h3>
+      <form id="admin-event-form" onsubmit="guardarEventoAdmin(event)">
+        <input type="hidden" id="admin-event-id">
+        <div class="admin-grid">
+          <div class="admin-field"><label for="admin-date">Fecha</label><input id="admin-date" type="date" required></div>
+          <div class="admin-field"><label for="admin-category">Categoría</label><select id="admin-category" required>
+            <option value="conmemoracion">Conmemoración</option><option value="reconocimiento">Reconocimiento</option><option value="cumpleanos">Cumpleaños</option><option value="educacion">Educación continuada</option><option value="celebracion">Celebración</option><option value="actividad">Actividad</option><option value="campana">Campaña</option>
+          </select></div>
+          <div class="admin-field full"><label for="admin-title">Título del evento</label><input id="admin-title" maxlength="180" required placeholder="Ej. Día Mundial de la Seguridad del Paciente"></div>
+          <div class="admin-field full"><label for="admin-description">Descripción</label><textarea id="admin-description" maxlength="1000" placeholder="Escribe una breve descripción"></textarea></div>
+          <div class="admin-field"><label for="admin-person">Nombre de la persona (si aplica)</label><input id="admin-person" maxlength="160" placeholder="Nombre del homenajeado o cumpleañero"></div>
+          <div class="admin-field"><label for="admin-role">Cargo (si aplica)</label><input id="admin-role" maxlength="120" placeholder="Cargo o área"></div>
+          <div class="admin-field full"><label for="admin-image">Flyer o imagen desde tu computador</label><input id="admin-image" type="file" accept="image/png,image/jpeg,image/webp"><span class="admin-hint" id="admin-image-hint">Puedes dejarlo vacío si el evento no tiene imagen. Formatos: PNG, JPG o WEBP; máximo 8 MB.</span></div>
+        </div>
+        <div class="admin-actions"><button class="admin-primary" id="admin-save-button" type="submit">Guardar evento</button><button class="admin-secondary" type="button" onclick="limpiarFormularioAdmin()">Limpiar formulario</button></div>
+      </form>
+      <div class="admin-status" id="admin-status" role="status">Los eventos guardados se mostrarán en la revista pública.</div>
+      <h3 style="color:var(--dark-blue);margin:18px 0 10px">Contenido registrado</h3>
+      <div class="admin-event-list" id="admin-event-list"></div>
+    </div>
+  </section>
+</div>
+
+
 <!-- ============================================================
      MODAL DE FLYERS
 ============================================================ -->
@@ -2010,7 +2085,7 @@ const revista = {
 ============================================================ */
 
 
-const eventos = [
+const eventosIniciales = [
 
     /* ========================================================
        01 OCTUBRE
@@ -2397,6 +2472,9 @@ const eventos = [
 
 ];
 
+let eventos = eventosIniciales.slice();
+
+
 
 
 /****************************************************************
@@ -2693,6 +2771,8 @@ function cargarImagenConExtension(
        .webp
     */
 
+
+    if (/^https?:\/\//i.test(nombre)) { callback(nombre); return; }
 
     if (
         /\.(png|jpg|jpeg|webp)$/i.test(nombre)
@@ -4174,6 +4254,166 @@ bookElement.addEventListener(
 
 
 
+
+/* ============================================================
+   SUPABASE Y PANEL ADMINISTRATIVO
+============================================================ */
+const SUPABASE_URL = "https://ivudxcloygqqkzvsdsx.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_nturbKm8_8v1Eb0bsXKUBg_R9e6t2YM";
+const ADMIN_USER_ID = "774846a1-4083-48ad-a19e-8a97b8687ada";
+const BUCKET_REVISTA = "revista-vita";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let eventosDB = [];
+let sesionAdmin = null;
+
+function escaparHTML(valor) {
+  return String(valor ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function tipoDesdeCategoria(categoria) {
+  const mapa = {conmemoracion:"conmemoracion",reconocimiento:"reconocimiento",cumpleanos:"cumpleanos",educacion:"educacion",celebracion:"celebracion",actividad:"actividad",campana:"campana"};
+  return mapa[categoria] || "actividad";
+}
+function filaAEvento(row) {
+  const fecha = new Date(row.fecha + "T12:00:00");
+  return {id:row.id,dia:String(fecha.getDate()).padStart(2,"0"),titulo:row.titulo,descripcion:row.descripcion || "",tipo:tipoDesdeCategoria(row.categoria),persona:row.persona || "",cargo:row.cargo || "",inicial:(row.persona || "").trim().charAt(0).toUpperCase(),flyers:row.imagen_url ? [row.imagen_url] : [],fecha:row.fecha,mes:row.mes,anio:row.anio};
+}
+async function cargarEventosPublicos() {
+  try {
+    const {data,error}=await supabaseClient.from("eventos").select("*").order("fecha",{ascending:true});
+    if(error) throw error;
+    eventosDB=data || [];
+    if(eventosDB.length) {
+      const ultimo=eventosDB.reduce((a,b)=> (b.anio*100+b.mes)>(a.anio*100+a.mes)?b:a);
+      revista.mes=ultimo.mes; revista.anio=ultimo.anio;
+      revista.nombreMes=new Date(ultimo.anio,ultimo.mes-1,1).toLocaleDateString("es-CO",{month:"long"});
+      revista.nombreMes=revista.nombreMes.charAt(0).toUpperCase()+revista.nombreMes.slice(1);
+      revista.nombreMesMayusculas=revista.nombreMes.toUpperCase();
+      revista.carpetaMes=revista.nombreMes.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
+      eventos=eventosDB.filter(e=>e.mes===revista.mes && e.anio===revista.anio).map(filaAEvento);
+    }
+  } catch(error) {
+    console.error("No fue posible cargar los eventos de Supabase:",error);
+  }
+}
+function abrirPanelAdmin() {
+  document.getElementById("admin-overlay").classList.add("active");
+  document.body.style.overflow="hidden";
+  verificarSesionAdmin();
+}
+function cerrarPanelAdmin() {
+  document.getElementById("admin-overlay").classList.remove("active");
+  document.body.style.overflow="";
+}
+function cerrarPanelAdminFondo(event) { if(event.target.id==="admin-overlay") cerrarPanelAdmin(); }
+async function verificarSesionAdmin() {
+  const {data}=await supabaseClient.auth.getSession();
+  sesionAdmin=data.session;
+  mostrarEstadoAdmin();
+}
+function mostrarEstadoAdmin() {
+  const autorizado=sesionAdmin && sesionAdmin.user.id===ADMIN_USER_ID;
+  document.getElementById("admin-login").hidden=!!autorizado;
+  document.getElementById("admin-content").hidden=!autorizado;
+  if(sesionAdmin && !autorizado) {
+    document.getElementById("admin-login-status").textContent="Esta cuenta no tiene permiso para administrar la revista.";
+  }
+  if(autorizado) {
+    document.getElementById("admin-user-label").textContent="Sesión iniciada: "+sesionAdmin.user.email;
+    cargarListaAdmin();
+  }
+}
+async function iniciarSesionAdmin() {
+  const status=document.getElementById("admin-login-status");
+  status.textContent="Verificando acceso...";
+  const email=document.getElementById("admin-email").value.trim();
+  const password=document.getElementById("admin-password").value;
+  const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error) { status.textContent="No se pudo iniciar sesión. Verifica el correo y la contraseña."; return; }
+  sesionAdmin=data.session;
+  mostrarEstadoAdmin();
+  if(sesionAdmin.user.id!==ADMIN_USER_ID) {
+    await supabaseClient.auth.signOut(); sesionAdmin=null; mostrarEstadoAdmin();
+    status.textContent="Esta cuenta no está autorizada para administrar.";
+  }
+}
+async function cerrarSesionAdmin() {
+  await supabaseClient.auth.signOut(); sesionAdmin=null; mostrarEstadoAdmin();
+  document.getElementById("admin-password").value="";
+}
+function limpiarFormularioAdmin() {
+  document.getElementById("admin-event-form").reset();
+  document.getElementById("admin-event-id").value="";
+  document.getElementById("admin-save-button").textContent="Guardar evento";
+  document.getElementById("admin-image-hint").textContent="Puedes dejarlo vacío si el evento no tiene imagen. Formatos: PNG, JPG o WEBP; máximo 8 MB.";
+}
+async function cargarListaAdmin() {
+  const box=document.getElementById("admin-event-list");
+  box.innerHTML="<p class='admin-hint'>Cargando eventos...</p>";
+  const {data,error}=await supabaseClient.from("eventos").select("*").order("fecha",{ascending:false});
+  if(error) { box.textContent="No se pudieron cargar los eventos: "+error.message; return; }
+  eventosDB=data || [];
+  if(!eventosDB.length) { box.innerHTML="<p class='admin-hint'>Todavía no hay eventos. Agrega el primero con el formulario.</p>"; return; }
+  box.innerHTML=eventosDB.map(e=>`<div class="admin-event"><div><strong>${escaparHTML(e.titulo)}</strong><small>${escaparHTML(e.fecha)} · ${escaparHTML(e.categoria)} ${e.persona?"· "+escaparHTML(e.persona):""}</small></div><div class="admin-event-actions"><button class="admin-secondary" onclick="editarEventoAdmin(${e.id})">Editar</button><button class="admin-danger" onclick="eliminarEventoAdmin(${e.id})">Eliminar</button></div></div>`).join("");
+}
+function editarEventoAdmin(id) {
+  const e=eventosDB.find(x=>x.id===id); if(!e) return;
+  document.getElementById("admin-event-id").value=e.id;
+  document.getElementById("admin-date").value=e.fecha;
+  document.getElementById("admin-category").value=e.categoria || "actividad";
+  document.getElementById("admin-title").value=e.titulo || "";
+  document.getElementById("admin-description").value=e.descripcion || "";
+  document.getElementById("admin-person").value=e.persona || "";
+  document.getElementById("admin-role").value=e.cargo || "";
+  document.getElementById("admin-image").value="";
+  document.getElementById("admin-image-hint").textContent=e.imagen_url?"Ya tiene una imagen. Si no seleccionas otra, se conservará.":"Este evento no tiene imagen.";
+  document.getElementById("admin-save-button").textContent="Actualizar evento";
+  document.getElementById("admin-status").textContent="Editando: "+e.titulo;
+  document.getElementById("admin-event-form").scrollIntoView({behavior:"smooth",block:"start"});
+}
+async function guardarEventoAdmin(event) {
+  event.preventDefault();
+  if(!sesionAdmin || sesionAdmin.user.id!==ADMIN_USER_ID) { alert("Inicia sesión con la cuenta administradora."); return; }
+  const status=document.getElementById("admin-status"); const btn=document.getElementById("admin-save-button");
+  btn.disabled=true; status.textContent="Guardando...";
+  try {
+    const fecha=document.getElementById("admin-date").value;
+    const partes=fecha.split("-").map(Number);
+    const id=document.getElementById("admin-event-id").value;
+    const previo=id?eventosDB.find(e=>String(e.id)===id):null;
+    let imagen_url=previo?.imagen_url || null;
+    const file=document.getElementById("admin-image").files[0];
+    if(file) {
+      if(file.size>8*1024*1024) throw new Error("La imagen supera el límite de 8 MB.");
+      if(!["image/png","image/jpeg","image/webp"].includes(file.type)) throw new Error("Usa una imagen PNG, JPG o WEBP.");
+      const ext=file.name.split(".").pop().toLowerCase();
+      const ruta=`${partes[0]}/${String(partes[1]).padStart(2,"0")}/${crypto.randomUUID()}.${ext}`;
+      const {error:uploadError}=await supabaseClient.storage.from(BUCKET_REVISTA).upload(ruta,file,{upsert:false,contentType:file.type});
+      if(uploadError) throw uploadError;
+      const {data:urlData}=supabaseClient.storage.from(BUCKET_REVISTA).getPublicUrl(ruta);
+      imagen_url=urlData.publicUrl;
+    }
+    const payload={fecha,titulo:document.getElementById("admin-title").value.trim(),categoria:document.getElementById("admin-category").value,descripcion:document.getElementById("admin-description").value.trim(),persona:document.getElementById("admin-person").value.trim() || null,cargo:document.getElementById("admin-role").value.trim() || null,imagen_url,mes:partes[1],anio:partes[0]};
+    const result=id?await supabaseClient.from("eventos").update(payload).eq("id",Number(id)):await supabaseClient.from("eventos").insert(payload);
+    if(result.error) throw result.error;
+    status.textContent=id?"Evento actualizado correctamente.":"Evento agregado correctamente.";
+    limpiarFormularioAdmin();
+    await cargarListaAdmin();
+    await cargarEventosPublicos();
+    configurarRevista(); generarCalendario(); generarHomenajeados(); generarCumpleanos(); generarGaleria();
+  } catch(error) {
+    console.error(error); status.textContent="No se pudo guardar: "+(error.message || "Error inesperado");
+  } finally { btn.disabled=false; }
+}
+async function eliminarEventoAdmin(id) {
+  const e=eventosDB.find(x=>x.id===id); if(!e || !confirm("¿Eliminar el evento “"+e.titulo+"”?")) return;
+  const {error}=await supabaseClient.from("eventos").delete().eq("id",id);
+  if(error) { document.getElementById("admin-status").textContent="No se pudo eliminar: "+error.message; return; }
+  document.getElementById("admin-status").textContent="Evento eliminado.";
+  await cargarListaAdmin(); await cargarEventosPublicos();
+  configurarRevista(); generarCalendario(); generarHomenajeados(); generarCumpleanos(); generarGaleria();
+}
+
+
 /* ============================================================
    25. INICIALIZAR REVISTA
 ============================================================ */
@@ -4182,6 +4422,7 @@ window.addEventListener(
     "load",
     () => {
 
+        cargarEventosPublicos().then(() => {
         configurarRevista();
 
         generarCalendario();
@@ -4193,6 +4434,7 @@ window.addEventListener(
         generarGaleria();
 
         updatePageVisibility();
+        });
 
     }
 );
