@@ -1834,6 +1834,27 @@ body {
 </div>
 
 
+<!-- CAMBIO DE CONTRASEÑA: aparece al abrir un enlace de recuperación -->
+<div id="recovery-overlay" class="admin-overlay" style="display:none">
+  <section class="admin-panel" style="max-width:480px">
+    <h2 style="color:var(--dark-blue);margin-bottom:12px">Crear nueva contraseña</h2>
+    <p style="color:#526579;margin-bottom:16px">Escribe una contraseña nueva para tu cuenta administradora.</p>
+    <form id="recovery-form">
+      <div class="admin-field">
+        <label for="recovery-password">Nueva contraseña</label>
+        <input id="recovery-password" type="password" minlength="8" autocomplete="new-password" required placeholder="Mínimo 8 caracteres">
+      </div>
+      <div class="admin-field">
+        <label for="recovery-password-confirm">Confirmar contraseña</label>
+        <input id="recovery-password-confirm" type="password" minlength="8" autocomplete="new-password" required placeholder="Escribe nuevamente la contraseña">
+      </div>
+      <div class="admin-actions"><button class="admin-primary" type="submit">Guardar nueva contraseña</button></div>
+      <p id="recovery-status" class="admin-status" role="status"></p>
+    </form>
+  </section>
+</div>
+
+
 <!-- ============================================================
      MODAL DE FLYERS
 ============================================================ -->
@@ -4262,7 +4283,15 @@ const SUPABASE_URL = "https://ivudxcloygqqkzvsdsx.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_nturbKm8_8v1Eb0bsXKUBg_R9e6t2YM";
 const ADMIN_USER_ID = "774846a1-4083-48ad-a19e-8a97b8687ada";
 const BUCKET_REVISTA = "revista-vita";
+
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    const recovery = document.getElementById("recovery-overlay");
+    if (recovery) recovery.style.display = "flex";
+  }
+});
+
 let eventosDB = [];
 let sesionAdmin = null;
 
@@ -4413,6 +4442,41 @@ async function eliminarEventoAdmin(id) {
   configurarRevista(); generarCalendario(); generarHomenajeados(); generarCumpleanos(); generarGaleria();
 }
 
+
+
+// Guardar la nueva contraseña después de abrir el enlace de recuperación.
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("recovery-form");
+  if (!form) return;
+  form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const password = document.getElementById("recovery-password").value;
+    const confirmation = document.getElementById("recovery-password-confirm").value;
+    const status = document.getElementById("recovery-status");
+    if (password.length < 8) {
+      status.textContent = "La contraseña debe tener al menos 8 caracteres.";
+      return;
+    }
+    if (password !== confirmation) {
+      status.textContent = "Las contraseñas no coinciden.";
+      return;
+    }
+    status.textContent = "Guardando contraseña...";
+    const { error } = await supabaseClient.auth.updateUser({ password });
+    if (error) {
+      status.textContent = "No se pudo cambiar la contraseña: " + error.message;
+      return;
+    }
+    status.textContent = "¡Contraseña actualizada! Ya puedes iniciar sesión en Administración.";
+    document.getElementById("recovery-password").value = "";
+    document.getElementById("recovery-password-confirm").value = "";
+    setTimeout(() => {
+      document.getElementById("recovery-overlay").style.display = "none";
+      history.replaceState(null, document.title, location.pathname + location.search);
+      supabaseClient.auth.signOut();
+    }, 2500);
+  });
+});
 
 /* ============================================================
    25. INICIALIZAR REVISTA
