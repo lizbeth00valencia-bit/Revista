@@ -13,7 +13,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<!-- Century Gothic se prioriza cuando está instalada en el dispositivo. -->
 
 
 <!-- ============================================================
@@ -1498,6 +1498,41 @@ body{
   *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
 }
 
+
+/* ===== Rediseño editorial dinámico Clínica Vita ===== */
+:root{
+ --primary-blue:#087fbd;--dark-blue:#075783;--accent-blue:#18a5d5;--light-blue:#e5f5fb;
+ --soft-gray:#f7fbfd;--border-gray:#dcecf2;--text-dark:#263c4a;--text-muted:#6d8490;
+ --font-family:"Century Gothic","Avant Garde",Arial,sans-serif;
+ --shadow-soft:0 12px 30px rgba(5,77,112,.09);
+ --shadow-hard:0 20px 48px rgba(5,77,112,.14);
+}
+body{font-family:var(--font-family);background:radial-gradient(circle at 8% 8%,#e8f8fc 0,transparent 28%),radial-gradient(circle at 95% 30%,#f2f7ff 0,transparent 26%),#f7fbfd;}
+.app-header{background:rgba(255,255,255,.94);backdrop-filter:blur(14px);border-bottom:1px solid #dcecf2;padding:12px clamp(14px,3vw,34px);gap:16px}
+.brand-logo{gap:14px}.vita-logo{width:76px;height:54px;object-fit:contain;display:block}
+.brand-copy h1{font-family:var(--font-family);font-size:clamp(15px,2vw,21px);letter-spacing:-.5px;color:#075783}
+.brand-copy span{display:block;font-size:10px;letter-spacing:.7px;color:#0786bd;margin-top:3px}
+.brand-logo i{display:none}
+.btn-header,.admin-access-btn{border-radius:999px;padding:10px 16px;transition:transform .2s,box-shadow .2s}
+.btn-header:hover,.admin-access-btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(8,127,189,.16)}
+.book-container{border:1px solid #dcecf2;border-radius:22px;box-shadow:0 22px 60px rgba(5,77,112,.12)}
+.page{border-radius:22px}
+.page-title{letter-spacing:-.7px}
+.event-card,.birthday-card,.gallery-item,.calendar-day{border-radius:16px;transition:transform .22s,box-shadow .22s}
+.event-card:hover,.birthday-card:hover,.gallery-item:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(5,77,112,.12)}
+.btn-modal{border-radius:999px}
+.share-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:9px}
+.btn-share{background:#e8f5fa;color:#075783;border:1px solid #d1eaf4;padding:10px 15px}
+.btn-share:hover{background:#d6eef8}
+.vita-logo{filter:drop-shadow(0 2px 2px rgba(0,0,0,.03))}
+@media(max-width:760px){
+ .app-header{align-items:flex-start;flex-direction:column}
+ .header-controls{width:100%;flex-wrap:wrap;justify-content:flex-start}
+ .vita-logo{width:62px;height:44px}
+ .brand-copy span{font-size:9px}
+ .share-actions .btn-modal{flex:1 1 42%;font-size:12px;padding:9px 10px}
+}
+
 </style>
 </head>
 
@@ -1512,13 +1547,8 @@ body{
 <header class="app-header">
 
     <div class="brand-logo">
-
-        <i class="fa-solid fa-book-open-reader"></i>
-
-        <h1 id="header-title">
-            Revista Digital Institucional
-        </h1>
-
+        <img class="vita-logo" src="assets/logo-vita.webp" alt="Clínica Vita">
+        <div class="brand-copy"><h1 id="header-title">Revista Digital Institucional</h1><span>Clínica Vita · Eres de vital importancia</span></div>
     </div>
 
 
@@ -2101,16 +2131,12 @@ body{
         </div>
 
 
-        <div class="modal-footer">
-
-            <button
-                class="btn-modal btn-modal-primary"
-                onclick="closeModal()">
-
-                Cerrar
-
-            </button>
-
+        <div class="modal-footer share-actions">
+            <button class="btn-modal btn-share" type="button" onclick="compartirFlyer()"><i class="fa-solid fa-share-nodes"></i> Compartir</button>
+            <button class="btn-modal btn-share" type="button" onclick="descargarFlyer()"><i class="fa-solid fa-download"></i> Descargar</button>
+            <button class="btn-modal btn-share" type="button" onclick="compartirWhatsApp()"><i class="fa-brands fa-whatsapp"></i> WhatsApp</button>
+            <button class="btn-modal btn-modal-primary" type="button" onclick="copiarEnlaceFlyer()"><i class="fa-solid fa-link"></i> Copiar enlace</button>
+            <button class="btn-modal btn-modal-primary" type="button" onclick="closeModal()">Cerrar</button>
         </div>
 
     </div>
@@ -2170,15 +2196,18 @@ body{
    1. INFORMACIÓN GENERAL DEL MES
 ============================================================ */
 
+const fechaEdicionInicial = new Date();
+const mesesRevista = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+
 const revista = {
 
-    mes: 10,
+    mes: fechaEdicionInicial.getMonth() + 1,
 
-    anio: 2026,
+    anio: fechaEdicionInicial.getFullYear(),
 
-    nombreMes: "Octubre",
+    nombreMes: mesesRevista[fechaEdicionInicial.getMonth()],
 
-    nombreMesMayusculas: "OCTUBRE",
+    nombreMesMayusculas: mesesRevista[fechaEdicionInicial.getMonth()].toLocaleUpperCase("es-CO"),
 
 
     /*
@@ -2206,7 +2235,7 @@ const revista = {
        assets/noviembre/
     */
 
-    carpetaMes: "octubre",
+    carpetaMes: mesesRevista[fechaEdicionInicial.getMonth()].toLocaleLowerCase("es-CO"),
 
 
     portada: {
@@ -3907,8 +3936,8 @@ function generarGaleria() {
 ============================================================ */
 
 let currentFlyers = [];
-
 let currentFlyerIndex = 0;
+let currentFlyerUrl = "";
 
 
 function openFlyerModal(
@@ -4044,6 +4073,7 @@ function showCurrentFlyer() {
 
             if (ruta) {
 
+                currentFlyerUrl = ruta;
                 container.innerHTML = "";
 
 
@@ -4070,6 +4100,7 @@ function showCurrentFlyer() {
 
             else {
 
+                currentFlyerUrl = "";
                 container.innerHTML = `
 
                     <div class="image-error">
@@ -4112,6 +4143,53 @@ function showCurrentFlyer() {
 }
 
 
+
+
+/* Compartir y descargar el flyer que está abierto */
+async function compartirFlyer() {
+  if (!currentFlyerUrl) { alert("La imagen todavía no está disponible."); return; }
+  const titulo = document.getElementById("modal-title").innerText || "Publicación Clínica Vita";
+  try {
+    const response = await fetch(currentFlyerUrl);
+    const blob = await response.blob();
+    const ext = (blob.type.split("/")[1] || "jpg").replace("jpeg","jpg");
+    const file = new File([blob], "clinica-vita-publicacion."+ext, {type: blob.type || "image/jpeg"});
+    if (navigator.share && navigator.canShare && navigator.canShare({files:[file]})) {
+      await navigator.share({title:titulo,text:"Compartido desde la Revista Digital de Clínica Vita",files:[file]});
+    } else if (navigator.share) {
+      await navigator.share({title:titulo,text:"Revista Digital Clínica Vita",url:currentFlyerUrl});
+    } else {
+      await descargarFlyer();
+      alert("La opción de compartir archivos no está disponible en este navegador. Descargamos la imagen para que puedas adjuntarla.");
+    }
+  } catch (error) {
+    if (error && error.name !== "AbortError") {
+      window.open("https://wa.me/?text="+encodeURIComponent(titulo+" - "+currentFlyerUrl),"_blank","noopener");
+    }
+  }
+}
+async function descargarFlyer() {
+  if (!currentFlyerUrl) { alert("La imagen todavía no está disponible."); return; }
+  try {
+    const response = await fetch(currentFlyerUrl);
+    const blob = await response.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url; a.download = "Clinica-Vita-publicacion";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),1500);
+  } catch (error) { window.open(currentFlyerUrl,"_blank","noopener"); }
+}
+function compartirWhatsApp() {
+  if (!currentFlyerUrl) { alert("La imagen todavía no está disponible."); return; }
+  const titulo = document.getElementById("modal-title").innerText || "Publicación Clínica Vita";
+  window.open("https://wa.me/?text="+encodeURIComponent(titulo+" | Revista Digital Clínica Vita: "+currentFlyerUrl),"_blank","noopener");
+}
+async function copiarEnlaceFlyer() {
+  if (!currentFlyerUrl) { alert("La imagen todavía no está disponible."); return; }
+  try { await navigator.clipboard.writeText(new URL(currentFlyerUrl,location.href).href); alert("Enlace de la imagen copiado."); }
+  catch (error) { prompt("Copia el enlace de la publicación:",new URL(currentFlyerUrl,location.href).href); }
+}
 
 /* ============================================================
    17. SIGUIENTE FLYER
@@ -4533,6 +4611,10 @@ window.addEventListener(
     "load",
     async () => {
 
+        document.getElementById("public-mes").value = String(revista.mes);
+        document.getElementById("public-anio").value = String(revista.anio);
+        document.getElementById("admin-mes-edicion").value = String(revista.mes);
+        document.getElementById("admin-anio-edicion").value = String(revista.anio);
         await cargarEventosSupabase();
 
         configurarRevista();
