@@ -1249,6 +1249,255 @@ body {
 .admin-event-row strong{display:block}.admin-event-row small{color:#63778b}.admin-row-actions{display:flex;gap:7px;flex-shrink:0}
 .admin-row-actions button{padding:7px 10px;border-radius:7px;border:0;cursor:pointer}
 @media(max-width:620px){.admin-form-grid{grid-template-columns:1fr}.admin-panel{padding:17px;margin:8px auto}.admin-event-row{align-items:flex-start;flex-direction:column}.admin-row-actions{width:100%}.admin-row-actions button{flex:1}.header-controls{flex-wrap:wrap}}
+
+
+/* ============================================================
+   REDISEÑO EDITORIAL VITA — capa visual; conserva la lógica
+============================================================ */
+:root{
+  --primary-blue:#285b83;
+  --dark-blue:#173b59;
+  --accent-blue:#6c9fbd;
+  --light-blue:#eaf1f5;
+  --soft-gray:#f7f5f0;
+  --border-gray:#e4e0d8;
+  --text-dark:#263746;
+  --text-muted:#71808a;
+  --gold-accent:#b99a62;
+  --birthday-pink:#bd8290;
+  --font-family:'Aptos','Segoe UI',Arial,sans-serif;
+  --shadow-soft:0 12px 32px rgba(30,54,73,.08);
+  --shadow-hard:0 24px 65px rgba(23,59,89,.16);
+}
+html{scroll-behavior:smooth}
+body{
+  background:#f2f0eb;
+  color:var(--text-dark);
+  letter-spacing:.01em;
+}
+.app-header{
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid #e6e1d8;
+  padding:15px clamp(16px,4vw,54px);
+  box-shadow:0 5px 24px rgba(30,54,73,.055);
+  backdrop-filter:blur(12px);
+}
+.brand-logo{gap:14px}
+.brand-logo i{font-size:25px;color:#b39868}
+.brand-logo h1{
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(17px,2vw,22px);
+  letter-spacing:.015em;
+  color:#173b59;
+}
+.header-controls{gap:9px;align-items:center}
+.btn-header,.admin-access-btn{
+  border:1px solid #dce5e9;
+  background:#f5f7f7;
+  color:#285b83;
+  border-radius:5px;
+  padding:10px 14px;
+  font-size:12px;
+  letter-spacing:.035em;
+  transition:all .22s ease;
+}
+.btn-header:hover,.admin-access-btn:hover{
+  background:#173b59;color:white;border-color:#173b59;transform:translateY(-1px)
+}
+.edition-picker{color:#526a79!important}
+.edition-picker select,.edition-picker input{
+  border:1px solid #dce4e7!important;
+  background:#fff!important;
+  color:#294b63;
+  border-radius:4px!important;
+}
+.magazine-viewport{
+  max-width:1160px;
+  margin:34px auto 28px;
+  padding:0 22px;
+  justify-content:flex-start;
+}
+.book-container{
+  height: min(760px, calc(100vh - 205px));
+  min-height:620px;
+  border:1px solid #e4dfd5;
+  border-radius:3px;
+  background:#fffdfa;
+  box-shadow:0 24px 70px rgba(31,54,71,.13);
+}
+.page{
+  padding:clamp(28px,5vw,66px);
+  background:#fffdfa;
+  color:#344653;
+}
+.page-header{
+  border-bottom:1px solid #d9d2c5;
+  padding-bottom:16px;
+  margin-bottom:30px;
+  position:relative;
+}
+.page-header:after{
+  content:"";
+  position:absolute;bottom:-2px;left:0;width:68px;height:3px;background:#b69b6d;
+}
+.page-title{
+  font-family:Georgia,'Times New Roman',serif;
+  color:#173b59;
+  font-size:clamp(21px,3vw,29px);
+  font-weight:500;
+  text-transform:none;
+  letter-spacing:.01em;
+}
+.page-number{
+  background:#f3f0e9;color:#8a806f;border-radius:2px;
+  font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+}
+.page-cover{
+  background:
+    radial-gradient(ellipse at 82% 18%,rgba(255,255,255,.18),transparent 34%),
+    linear-gradient(135deg,#173b59 0%,#285b83 62%,#6e94a8 100%);
+  color:white;
+  gap:25px;
+  padding:clamp(30px,7vw,82px);
+}
+.page-cover:before{
+  content:"CLÍNICA VITA  •  COMUNICACIÓN INSTITUCIONAL";
+  position:absolute;top:28px;left:clamp(28px,5vw,62px);
+  color:rgba(255,255,255,.75);font-size:10px;letter-spacing:.2em;font-weight:600;
+}
+.page-cover:after{
+  content:"";
+  position:absolute;inset:18px;border:1px solid rgba(255,255,255,.24);
+  pointer-events:none;
+}
+.cover-badge{
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.35);
+  border-radius:2px;padding:9px 17px;
+  color:#fff;font-size:10px;letter-spacing:.2em;
+}
+.cover-title{
+  color:#fff;
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(34px,5.5vw,62px);
+  line-height:1.08;font-weight:500;
+  text-transform:none;max-width:800px;
+  letter-spacing:-.025em;
+}
+.cover-subtitle{
+  color:rgba(255,255,255,.84);
+  font-family:Georgia,'Times New Roman',serif;
+  font-size:clamp(15px,2vw,19px);
+  line-height:1.7;max-width:620px;
+}
+.cover-card{
+  background:rgba(255,255,255,.96);
+  border-radius:3px;padding:22px 28px;
+  box-shadow:0 14px 38px rgba(7,29,46,.18);
+  max-width:530px;
+}
+.cover-card h3{font-family:Georgia,'Times New Roman',serif!important;font-size:19px!important}
+.cover-card i{color:#b39868!important}
+.page-cover>div:last-child{color:rgba(255,255,255,.78)!important;z-index:1}
+.page-body{line-height:1.75}
+.page-body h3{font-family:Georgia,'Times New Roman',serif;font-weight:500}
+.calendar-grid{gap:9px;margin-top:18px}
+.day-header{
+  background:#edf1f2;color:#47667a;border-radius:2px;
+  font-size:10px;letter-spacing:.1em;padding:11px 2px;
+}
+.day-cell{
+  background:#fbfaf7;border:1px solid #e9e4da;border-radius:3px;
+  min-height:78px;padding:8px;
+}
+.day-cell.has-event{border:1px solid #7e9fb2;box-shadow:none}
+.day-cell.has-event:hover{border-color:#173b59;transform:translateY(-2px)}
+.day-cell.multiple-events{border-color:#b99a62}
+.day-cell.birthday-event{border-color:#bd8290;background:#fbf3f4}
+.day-badge{border-radius:2px;background:#47738f;font-size:9px;padding:4px}
+.multiple-events .day-badge{background:#a98d5e}
+.birthday-event .day-badge{background:#ad7585}
+.honorees-grid{gap:14px}
+.honoree-card{
+  border:1px solid #e8e3da;border-radius:4px;
+  background:#fff;padding:17px;box-shadow:0 5px 18px rgba(30,54,73,.045);
+}
+.honoree-card:hover{transform:translateY(-2px);border-color:#9db4c1}
+.honoree-avatar{background:#edf2f3;color:#315d78;width:48px;height:48px}
+.honoree-info h4{font-family:Georgia,'Times New Roman',serif;font-size:15px;font-weight:600}
+.gallery-grid{gap:18px}
+.gallery-item{
+  background:#fff;border:1px solid #e8e3da;border-radius:4px;
+  box-shadow:0 5px 18px rgba(30,54,73,.045);
+}
+.gallery-item:hover{transform:translateY(-3px);box-shadow:var(--shadow-soft)}
+.gallery-thumb{height:175px;background:#edf2f3;color:#426d87}
+.gallery-caption{padding:12px;font-size:12px;background:#fff;color:#294b63}
+.navigation-bar{
+  margin-top:22px;background:#fffdfa;border:1px solid #e5dfd5;
+  border-radius:3px;padding:10px 18px;box-shadow:0 8px 24px rgba(30,54,73,.07);
+}
+.nav-btn{background:#285b83;border-radius:3px;width:38px;height:38px}
+.nav-btn:hover{background:#173b59;transform:translateY(-1px)}
+.page-indicator{font-size:12px;letter-spacing:.06em;color:#526a79}
+.app-footer{margin:10px 0 24px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8a8a82}
+.modal-overlay{background:rgba(15,35,51,.78);backdrop-filter:blur(4px)}
+.modal-container{border-radius:4px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+.modal-header{background:#173b59;padding:18px 22px}
+.modal-header h3{font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:19px}
+.flyer-image-container{background:#f4f2ed;border-radius:3px}
+.flyer-nav-btn{background:#285b83;border-radius:3px}
+.modal-footer{background:#f7f5f0}
+.btn-modal-primary{background:#285b83;border-radius:3px}
+.admin-overlay{background:rgba(14,35,52,.72);backdrop-filter:blur(5px)}
+.admin-panel{border-radius:5px;border:1px solid #e7e0d5;box-shadow:0 24px 70px rgba(0,0,0,.25);padding:clamp(18px,3vw,32px)}
+.admin-panel h2{font-family:Georgia,'Times New Roman',serif;font-weight:500;color:#173b59;font-size:26px}
+.admin-close{border-radius:3px;background:#f1f2ef;color:#31546b}
+.admin-field label{color:#476174;letter-spacing:.02em}
+.admin-field input,.admin-field select,.admin-field textarea{
+  border:1px solid #d9e0e2;border-radius:3px;padding:12px;
+  color:#263746;background:#fffdfa;
+}
+.admin-field input:focus,.admin-field select:focus,.admin-field textarea:focus{
+  outline:2px solid rgba(108,159,189,.24);border-color:#6c9fbd;
+}
+.admin-primary{background:#285b83;border-radius:3px}
+.admin-secondary{background:#edf1f2;color:#31566e;border-radius:3px}
+.admin-danger{background:#fbefef;color:#9b4c55;border-radius:3px}
+.admin-status{border-radius:3px;background:#edf3f5;color:#31566e}
+.admin-list{border-color:#e7e1d8}
+.admin-event-row{border-color:#ece7df}
+@media(max-width:768px){
+  .app-header{align-items:flex-start;gap:12px;flex-direction:column;padding:13px 16px}
+  .header-controls{width:100%;justify-content:flex-start;flex-wrap:wrap}
+  .magazine-viewport{margin:18px auto;padding:0 10px}
+  .book-container{height: min(720px, calc(100dvh - 225px));min-height:560px}
+  .page{padding:24px 20px}
+  .page-cover{padding:42px 24px}
+  .page-cover:before{top:23px;left:25px;font-size:8px}
+  .page-cover:after{inset:10px}
+  .cover-title{font-size:clamp(30px,8vw,44px)}
+  .cover-card{padding:17px}
+  .calendar-grid{gap:4px}
+  .day-cell{min-height:58px;padding:5px}
+  .gallery-thumb{height:130px}
+  .navigation-bar{margin-top:14px}
+}
+@media(max-width:500px){
+  .edition-picker{flex-wrap:wrap}
+  .header-controls .btn-header{font-size:11px;width:auto;height:auto;padding:9px 11px}
+  .header-controls .btn-header i{font-size:12px}
+  .gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .gallery-thumb{height:115px}
+  .day-header{font-size:8px}
+  .day-cell{min-height:48px}
+  .day-badge{font-size:6px}
+  .page-title{font-size:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}
+}
+
 </style>
 </head>
 
