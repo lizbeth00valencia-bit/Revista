@@ -23,7 +23,7 @@ create policy "Solo administradora cambia la apariencia"
 on public.configuracion_revista for all
 to authenticated
 using (auth.uid() = '774846a1-4083-48ad-a19e-8a97b8687ada'::uuid)
-with check (auth.uid() = '774846a1-4083-48ad-a19-8a97b8687ada'::uuid);
+with check (auth.uid() = '774846a1-4083-48ad-a19e-8a97b8687ada'::uuid);
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values (
@@ -63,7 +63,7 @@ using (
 )
 with check (
   bucket_id = 'revista-fondos'
-  and auth.uid() = '774846a1-4083-48ad-a19-8a97b8687ada'::uuid
+  and auth.uid() = '774846a1-4083-48ad-a19e-8a97b8687ada'::uuid
 );
 
 drop policy if exists "Solo administradora elimina fondos" on storage.objects;
