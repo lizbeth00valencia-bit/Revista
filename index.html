@@ -1547,7 +1547,7 @@ body{font-family:var(--font-family);background:radial-gradient(circle at 8% 8%,#
 <header class="app-header">
 
     <div class="brand-logo">
-        <img class="vita-logo" src="assets/logo-vita.webp" alt="Clínica Vita">
+        <img class="vita-logo" src="assets/logo-vita.svg" alt="Clínica Vita">
         <div class="brand-copy"><h1 id="header-title">Revista Digital Institucional</h1><span>Clínica Vita · Eres de vital importancia</span></div>
     </div>
 
@@ -4187,8 +4187,9 @@ function compartirWhatsApp() {
 }
 async function copiarEnlaceFlyer() {
   if (!currentFlyerUrl) { alert("La imagen todavía no está disponible."); return; }
-  try { await navigator.clipboard.writeText(new URL(currentFlyerUrl,location.href).href); alert("Enlace de la imagen copiado."); }
-  catch (error) { prompt("Copia el enlace de la publicación:",new URL(currentFlyerUrl,location.href).href); }
+  const enlace = new URL(location.href); enlace.searchParams.set("mes",String(revista.mes)); enlace.searchParams.set("anio",String(revista.anio));
+  try { await navigator.clipboard.writeText(enlace.href); alert("Enlace de esta edición copiado."); }
+  catch (error) { prompt("Copia el enlace de la edición:",enlace.href); }
 }
 
 /* ============================================================
@@ -4611,6 +4612,10 @@ window.addEventListener(
     "load",
     async () => {
 
+        const paramsEdicion = new URLSearchParams(location.search);
+        const mesSolicitado = Number(paramsEdicion.get("mes"));
+        const anioSolicitado = Number(paramsEdicion.get("anio"));
+        if (mesSolicitado >= 1 && mesSolicitado <= 12 && Number.isInteger(anioSolicitado) && anioSolicitado >= 2020 && anioSolicitado <= 2100) aplicarEdicionRevista(mesSolicitado, anioSolicitado);
         document.getElementById("public-mes").value = String(revista.mes);
         document.getElementById("public-anio").value = String(revista.anio);
         document.getElementById("admin-mes-edicion").value = String(revista.mes);
