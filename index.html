@@ -1533,6 +1533,22 @@ body{font-family:var(--font-family);background:radial-gradient(circle at 8% 8%,#
  .share-actions .btn-modal{flex:1 1 42%;font-size:12px;padding:9px 10px}
 }
 
+
+/* Selector de apariencia global */
+.visual-settings{border:1px solid #d8eaf2;background:linear-gradient(145deg,#f7fcff,#fff);border-radius:16px;padding:18px;margin:14px 0 22px}
+.visual-settings-heading{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.visual-settings-icon{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;background:#e2f4fb;color:#087fbd;font-size:19px}
+.visual-settings-heading h3{font-size:17px;color:#075783;margin:0 0 4px}
+.visual-settings-heading p,.visual-settings-note{font-size:12px;color:#6d8490;margin:0}
+.visual-background-preview{min-height:86px;border:1px dashed #9fc9dc;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:9px;color:#5c8295;background:linear-gradient(135deg,#e9f7fc,#f9fcfe);background-size:cover;background-position:center;font-size:13px}
+.visual-settings-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+.visual-settings-note{margin-top:12px}
+body[data-vita-theme="cielo"]{--primary-blue:#1597c8;--dark-blue:#075b82;--accent-blue:#53b8df;--light-blue:#e5f7fc;--soft-gray:#f5fbfd;--border-gray:#dceff5;--text-dark:#294653;--text-muted:#718a96}
+body[data-vita-theme="lavanda"]{--primary-blue:#7770b8;--dark-blue:#494579;--accent-blue:#a49bdc;--light-blue:#f0effb;--soft-gray:#faf9fe;--border-gray:#e5e2f4;--text-dark:#39384f;--text-muted:#77758f}
+body[data-vita-theme="natural"]{--primary-blue:#398b78;--dark-blue:#205d50;--accent-blue:#7eb9a8;--light-blue:#e9f5ef;--soft-gray:#f7fbf8;--border-gray:#dcebe2;--text-dark:#304b40;--text-muted:#71877b}
+body[data-vita-theme="arena"]{--primary-blue:#b17c4d;--dark-blue:#765236;--accent-blue:#d2a77b;--light-blue:#f8f0e7;--soft-gray:#fcf9f5;--border-gray:#eee2d4;--text-dark:#514338;--text-muted:#8a7a6c}
+@media(max-width:620px){.visual-settings{padding:14px}.visual-settings-actions button{flex:1 1 100%}}
+
 </style>
 </head>
 
@@ -2153,7 +2169,17 @@ body{font-family:var(--font-family);background:radial-gradient(circle at 8% 8%,#
 <div class="admin-field"><label for="admin-email">Correo electrónico</label><input id="admin-email" type="email" autocomplete="username" placeholder="Tu correo"></div>
 <div class="admin-field"><label for="admin-password">Contraseña</label><input id="admin-password" type="password" autocomplete="current-password" placeholder="Tu contraseña"></div>
 <div class="admin-actions"><button class="admin-primary" type="button" onclick="iniciarSesionAdmin()">Ingresar</button><button class="admin-secondary" type="button" onclick="solicitarRecuperacionAdmin()">Recuperar contraseña</button></div></div><div id="admin-recovery" hidden><p>Escribe y confirma tu nueva contraseña.</p><div class="admin-field"><label for="admin-new-password">Nueva contraseña</label><input id="admin-new-password" type="password" minlength="8" autocomplete="new-password"></div><div class="admin-field"><label for="admin-confirm-password">Confirmar contraseña</label><input id="admin-confirm-password" type="password" minlength="8" autocomplete="new-password"></div><div class="admin-actions"><button class="admin-primary" type="button" onclick="guardarNuevaContrasenaAdmin()">Actualizar contraseña</button></div></div>
-<div id="admin-workspace" hidden><div class="admin-status" id="admin-status">Sesión iniciada.</div><div class="admin-form-grid" style="margin:12px 0 20px"><div class="admin-field"><label for="admin-mes-edicion">Editar edición del mes</label><select id="admin-mes-edicion" onchange="cambiarEdicionAdmin()"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10" selected>Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div><div class="admin-field"><label for="admin-anio-edicion">Año</label><input id="admin-anio-edicion" type="number" min="2020" max="2100" value="2026" onchange="cambiarEdicionAdmin()"></div></div>
+<div id="admin-workspace" hidden><div class="admin-status" id="admin-status">Sesión iniciada.</div>
+<section class="visual-settings" id="visual-settings">
+  <div class="visual-settings-heading"><span class="visual-settings-icon"><i class="fa-solid fa-palette"></i></span><div><h3>Personalizar apariencia</h3><p>Estos cambios se aplicarán a todas las personas que visiten la revista.</p></div></div>
+  <div class="admin-form-grid">
+    <div class="admin-field"><label for="vita-theme-select">Tema de color</label><select id="vita-theme-select"><option value="vita">Vita fresco</option><option value="cielo">Cielo luminoso</option><option value="lavanda">Lavanda suave</option><option value="natural">Verde natural</option><option value="arena">Arena cálida</option></select></div>
+    <div class="admin-field"><label for="vita-background-file">Imagen de fondo personalizada</label><input id="vita-background-file" type="file" accept="image/png,image/jpeg,image/webp"></div>
+    <div class="admin-field full"><div class="visual-background-preview" id="vita-background-preview"><i class="fa-regular fa-image"></i><span>Fondo actual de la revista</span></div><div class="visual-settings-actions"><button type="button" class="admin-secondary" onclick="quitarFondoPersonalizado()">Usar fondo del tema</button><button type="button" class="admin-primary" onclick="guardarAparienciaGlobal()">Guardar apariencia para todos</button></div></div>
+  </div>
+  <p class="visual-settings-note" id="vita-settings-status">La apariencia guardada será visible para todos los visitantes.</p>
+</section>
+<div class="admin-form-grid" style="margin:12px 0 20px"><div class="admin-field"><label for="admin-mes-edicion">Editar edición del mes</label><select id="admin-mes-edicion" onchange="cambiarEdicionAdmin()"><option value="1">Enero</option><option value="2">Febrero</option><option value="3">Marzo</option><option value="4">Abril</option><option value="5">Mayo</option><option value="6">Junio</option><option value="7">Julio</option><option value="8">Agosto</option><option value="9">Septiembre</option><option value="10" selected>Octubre</option><option value="11">Noviembre</option><option value="12">Diciembre</option></select></div><div class="admin-field"><label for="admin-anio-edicion">Año</label><input id="admin-anio-edicion" type="number" min="2020" max="2100" value="2026" onchange="cambiarEdicionAdmin()"></div></div>
 <div class="admin-form-grid">
 <div class="admin-field"><label for="admin-fecha">Fecha</label><input id="admin-fecha" type="date"></div>
 <div class="admin-field"><label for="admin-categoria">Sección</label><select id="admin-categoria"><option value="conmemoracion">Conmemoración</option><option value="reconocimiento">Reconocimiento</option><option value="cumpleanos">Cumpleaños</option><option value="actividad">Actividad</option><option value="educacion">Educación continuada</option><option value="celebracion">Celebración</option></select></div>
@@ -4620,7 +4646,7 @@ window.addEventListener(
         document.getElementById("public-anio").value = String(revista.anio);
         document.getElementById("admin-mes-edicion").value = String(revista.mes);
         document.getElementById("admin-anio-edicion").value = String(revista.anio);
-        await cargarEventosSupabase();
+        await Promise.all([cargarEventosSupabase(),cargarAparienciaGlobal()]);
 
         configurarRevista();
 
@@ -4637,6 +4663,96 @@ window.addEventListener(
     }
 );
 
+
+
+/* APARIENCIA GLOBAL: configuración compartida mediante Supabase */
+const VITA_SETTINGS_TABLE = "configuracion_revista";
+const VITA_STORAGE_BUCKET = "revista-fondos";
+let fondoPersonalizadoActual = "";
+let fondoPendienteEliminar = false;
+const VITA_THEME_NAMES = {vita:"Vita fresco",cielo:"Cielo luminoso",lavanda:"Lavanda suave",natural:"Verde natural",arena:"Arena cálida"};
+
+function aplicarAparienciaGlobal(config = {}) {
+  const theme = Object.prototype.hasOwnProperty.call(VITA_THEME_NAMES,config.tema) ? config.tema : "vita";
+  document.body.dataset.vitaTheme = theme;
+  fondoPersonalizadoActual = config.fondo_url || "";
+  fondoPendienteEliminar = false;
+  if (fondoPersonalizadoActual) {
+    document.body.style.backgroundImage = "linear-gradient(rgba(248,252,255,.86),rgba(248,252,255,.86)),url("+JSON.stringify(fondoPersonalizadoActual)+")";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundAttachment = "fixed";
+  } else {
+    document.body.style.backgroundImage = "";
+    document.body.style.backgroundSize = "";
+    document.body.style.backgroundPosition = "";
+    document.body.style.backgroundAttachment = "";
+  }
+  const preview = document.getElementById("vita-background-preview");
+  if (preview) {
+    preview.style.backgroundImage = fondoPersonalizadoActual ? "linear-gradient(rgba(255,255,255,.30),rgba(255,255,255,.30)),url("+JSON.stringify(fondoPersonalizadoActual)+")" : "";
+    preview.innerHTML = fondoPersonalizadoActual ? '<span>Imagen personalizada activa</span>' : '<i class="fa-regular fa-image"></i><span>Fondo del tema seleccionado</span>';
+  }
+  const select = document.getElementById("vita-theme-select");
+  if (select) select.value = theme;
+}
+
+async function cargarAparienciaGlobal() {
+  try {
+    const {data,error} = await supabaseClient.from(VITA_SETTINGS_TABLE).select("tema,fondo_url").eq("id","global").maybeSingle();
+    if (error) throw error;
+    if (data) aplicarAparienciaGlobal(data);
+    else aplicarAparienciaGlobal({tema:"vita",fondo_url:""});
+  } catch(error) {
+    console.warn("No se pudo leer la apariencia global. Se usa el tema predeterminado.",error);
+    aplicarAparienciaGlobal({tema:"vita",fondo_url:""});
+  }
+}
+
+function quitarFondoPersonalizado() {
+  fondoPendienteEliminar = true;
+  fondoPersonalizadoActual = "";
+  const file = document.getElementById("vita-background-file");
+  if (file) file.value = "";
+  aplicarAparienciaGlobal({tema:document.getElementById("vita-theme-select").value,fondo_url:""});
+  fondoPendienteEliminar = true;
+  const status = document.getElementById("vita-settings-status");
+  if(status) status.textContent = "Se quitará la imagen al guardar los cambios.";
+}
+
+async function guardarAparienciaGlobal() {
+  const sessionResult = await supabaseClient.auth.getSession();
+  const user = sessionResult.data && sessionResult.data.session && sessionResult.data.session.user;
+  if (!user || user.id !== ADMIN_USER_ID) { mostrarEstadoAdmin("Inicia sesión como administradora para cambiar la apariencia.",true); return; }
+  const theme = document.getElementById("vita-theme-select").value;
+  const input = document.getElementById("vita-background-file");
+  const file = input && input.files && input.files[0];
+  if (file && file.size > 8*1024*1024) { alert("La imagen debe pesar menos de 8 MB."); return; }
+  const status = document.getElementById("vita-settings-status");
+  if(status) status.textContent = "Guardando apariencia…";
+  try {
+    let imageUrl = fondoPendienteEliminar ? "" : fondoPersonalizadoActual;
+    if (file) {
+      const ext = (file.name.split(".").pop() || "jpg").toLowerCase().replace(/[^a-z0-9]/g,"");
+      const path = "fondos/fondo-revista."+ext;
+      const {error:uploadError} = await supabaseClient.storage.from(VITA_STORAGE_BUCKET).upload(path,file,{upsert:true,contentType:file.type,cacheControl:"3600"});
+      if(uploadError) throw uploadError;
+      const {data:publicData} = supabaseClient.storage.from(VITA_STORAGE_BUCKET).getPublicUrl(path);
+      imageUrl = publicData.publicUrl+"?v="+Date.now();
+    }
+    const {error} = await supabaseClient.from(VITA_SETTINGS_TABLE).upsert({id:"global",tema:theme,fondo_url:imageUrl,actualizado_en:new Date().toISOString(),actualizado_por:user.id},{onConflict:"id"});
+    if(error) throw error;
+    aplicarAparienciaGlobal({tema:theme,fondo_url:imageUrl});
+    input.value = "";
+    fondoPendienteEliminar = false;
+    if(status) status.textContent = "¡Apariencia guardada! Todos los visitantes verán este diseño.";
+    mostrarEstadoAdmin("Apariencia institucional actualizada para todos.");
+  } catch(error) {
+    console.error("Error al guardar la apariencia global:",error);
+    if(status) status.textContent = "No se pudo guardar. Verifica que ejecutaste el SQL de configuración en Supabase.";
+    mostrarEstadoAdmin("No se pudo guardar la apariencia. Revisa la configuración de Supabase.",true);
+  }
+}
 
 /* PANEL PRIVADO: AUTENTICACIÓN Y GESTIÓN DE PUBLICACIONES */
 const ADMIN_USER_ID="774846a1-4083-48ad-a19e-8a97b8687ada";
@@ -4665,7 +4781,7 @@ async function cambiarEdicionAdmin(){
   await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();
   await listarEventosAdmin();mostrarEstadoAdmin("Mostrando la edición "+revista.nombreMes+" "+revista.anio+".");
 }
-async function comprobarSesionAdmin(){const {data:{session}}=await supabaseClient.auth.getSession();const ok=!!session&&session.user.id===ADMIN_USER_ID;document.getElementById("admin-login").hidden=ok;document.getElementById("admin-workspace").hidden=!ok;if(session&&!ok){await supabaseClient.auth.signOut();mostrarEstadoAdmin("Esta cuenta no tiene permisos de administración.",true);}if(ok){document.getElementById("admin-mes-edicion").value=String(revista.mes);document.getElementById("admin-anio-edicion").value=String(revista.anio);document.getElementById("public-mes").value=String(revista.mes);document.getElementById("public-anio").value=String(revista.anio);await listarEventosAdmin();}}
+async function comprobarSesionAdmin(){const {data:{session}}=await supabaseClient.auth.getSession();const ok=!!session&&session.user.id===ADMIN_USER_ID;document.getElementById("admin-login").hidden=ok;document.getElementById("admin-workspace").hidden=!ok;if(session&&!ok){await supabaseClient.auth.signOut();mostrarEstadoAdmin("Esta cuenta no tiene permisos de administración.",true);}if(ok){await cargarAparienciaGlobal();document.getElementById("admin-mes-edicion").value=String(revista.mes);document.getElementById("admin-anio-edicion").value=String(revista.anio);document.getElementById("public-mes").value=String(revista.mes);document.getElementById("public-anio").value=String(revista.anio);await listarEventosAdmin();}}
 async function iniciarSesionAdmin(){const email=document.getElementById("admin-email").value.trim();const password=document.getElementById("admin-password").value;if(!email||!password){alert("Escribe tu correo y contraseña.");return;}const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){alert("No fue posible iniciar sesión. Verifica el correo y la contraseña.");console.error(error);return;}if(data.user.id!==ADMIN_USER_ID){await supabaseClient.auth.signOut();alert("Esta cuenta no está autorizada para administrar la revista.");return;}await comprobarSesionAdmin();}
 async function solicitarRecuperacionAdmin(){const email=document.getElementById("admin-email").value.trim();if(!email){alert("Escribe primero el correo de tu cuenta administradora.");return;}const redirectTo=window.location.origin+window.location.pathname;const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});if(error){alert("No se pudo enviar el correo de recuperación. Intenta nuevamente.");console.error(error);return;}alert("Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña.");}
 async function cerrarSesionAdmin(){await supabaseClient.auth.signOut();document.getElementById("admin-workspace").hidden=true;document.getElementById("admin-login").hidden=false;}
