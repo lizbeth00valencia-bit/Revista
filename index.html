@@ -2231,7 +2231,24 @@ body[data-vita-theme="arena"]{--primary-blue:#b17c4d;--dark-blue:#765236;--accen
 <div class="admin-field full"><label for="admin-imagen">Imagen o volante (opcional)</label><input id="admin-imagen" type="file" accept="image/*"><small>Se guardará en el almacenamiento de la revista.</small></div>
 </div>
 <div class="admin-actions"><button class="admin-primary" type="button" onclick="guardarEventoAdmin()">Guardar publicación</button><button class="admin-secondary" type="button" onclick="limpiarFormularioAdmin()">Limpiar</button><button class="admin-secondary" type="button" onclick="cerrarSesionAdmin()">Cerrar sesión</button></div>
-<div class="admin-list"><h3>Publicaciones de esta edición</h3><div id="admin-event-list">Cargando publicaciones…</div></div></div>
+<div class="admin-list"><h3>Publicaciones de esta edición</h3><div id="admin-event-list">Cargando publicaciones…</div></div>
+<section class="admin-list" id="admin-video-manager">
+<h3 style="color:#075783;margin-bottom:8px"><i class="fa-solid fa-circle-play"></i> Vita en video</h3>
+<p style="font-size:12px;color:#6d8490;margin-bottom:14px">Administra los videos que aparecerán en la página 6 de esta edición. Pega enlaces públicos de YouTube, Vimeo o archivos MP4/WebM.</p>
+<div class="admin-form-grid">
+<div class="admin-field full"><label for="admin-video-titulo">Título del video</label><input id="admin-video-titulo" type="text" maxlength="150" placeholder="Ej. Conoce nuestros servicios"></div>
+<div class="admin-field full"><label for="admin-video-descripcion">Descripción</label><textarea id="admin-video-descripcion" maxlength="500" placeholder="Una breve descripción para los lectores"></textarea></div>
+<div class="admin-field full"><label for="admin-video-url">Enlace del video</label><input id="admin-video-url" type="url" placeholder="https://www.youtube.com/watch?v=..."></div>
+<div class="admin-field full"><label for="admin-video-portada">Enlace de imagen de portada (opcional)</label><input id="admin-video-portada" type="url" placeholder="https://..."></div>
+<div class="admin-field"><label for="admin-video-orden">Orden de visualización</label><input id="admin-video-orden" type="number" min="0" step="1" value="0"></div>
+</div>
+<div class="admin-actions">
+<button class="admin-primary" id="admin-video-save" type="button" onclick="guardarVideoAdmin()">Guardar video</button>
+<button class="admin-secondary" type="button" onclick="limpiarFormularioVideoAdmin()">Limpiar</button>
+</div>
+<div class="admin-list"><h4 style="margin-bottom:10px;color:#31566e">Videos de esta edición</h4><div id="admin-video-list">Cargando videos…</div></div>
+</section>
+</div>
 </section></div>
 <footer class="app-footer">
 
@@ -4348,9 +4365,27 @@ function closeModalOnOverlay(
    { titulo:"Voces Vita", descripcion:"Conoce a nuestros especialistas.", url:"https://www.youtube.com/watch?v=ID_DEL_VIDEO" }
    Para videos propios, usa una URL pública HTTPS que termine en .mp4 o .webm.
 ============================================================ */
-const videosRevista = [
-    // Agrega tus videos aquí, separando cada objeto con una coma.
-];
+let videosRevista = [];
+let videosAdminCache = [];
+let videoEditandoId = null;
+
+async function cargarVideosSupabase() {
+    try {
+        const { data, error } = await supabaseClient
+            .from("videos_revista")
+            .select("id, mes, anio, titulo, descripcion, url, portada_url, orden")
+            .eq("mes", String(revista.mes))
+            .eq("anio", revista.anio)
+            .order("orden", { ascending: true })
+            .order("created_at", { ascending: true });
+        if (error) throw error;
+        videosRevista = Array.isArray(data) ? data : [];
+    } catch (error) {
+        console.error("No fue posible cargar los videos de Supabase:", error);
+        videosRevista = [];
+    }
+    generarVideosRevista();
+}
 
 function obtenerFuenteVideo(url) {
     try {
@@ -4382,7 +4417,7 @@ function generarVideosRevista() {
     }
     contenedor.innerHTML = videos.map((v,i) => {
         const fuente = obtenerFuenteVideo(v.url);
-        const poster = v.portada || fuente.poster;
+        const poster = v.portada_url || v.portada || fuente.poster;
         const imagen = poster ? `<img src="${escaparHtmlAdmin(poster)}" alt="Portada del video: ${escaparHtmlAdmin(v.titulo)}" loading="lazy" onerror="this.style.display='none'">` : `<i class="fa-solid fa-film" style="font-size:42px;color:rgba(255,255,255,.85)"></i>`;
         return `<article class="video-card"><div class="video-preview" id="video-preview-${i}">${imagen}<button class="video-play" type="button" onclick="reproducirVideoRevista(${i})" aria-label="Reproducir ${escaparHtmlAdmin(v.titulo)}"><i class="fa-solid fa-play"></i></button></div><div class="video-card-copy"><h3>${escaparHtmlAdmin(v.titulo)}</h3><p>${escaparHtmlAdmin(v.descripcion || "Clínica Vita · Comunicación institucional")}</p></div></article>`;
     }).join("");
@@ -4395,7 +4430,7 @@ function reproducirVideoRevista(indice) {
     const fuente = obtenerFuenteVideo(video.url);
     if (!fuente) return;
     if (fuente.tipo === "archivo") {
-        contenedor.innerHTML = `<video class="video-player-frame" controls playsinline preload="metadata" poster="${escaparHtmlAdmin(video.portada || "")}"><source src="${escaparHtmlAdmin(fuente.url)}" type="${/\.webm(?:$|\?)/i.test(fuente.url) ? "video/webm" : "video/mp4"}">Tu navegador no admite la reproducción de este video.</video>`;
+        contenedor.innerHTML = `<video class="video-player-frame" controls playsinline preload="metadata" poster="${escaparHtmlAdmin(video.portada_url || video.portada || "")}"><source src="${escaparHtmlAdmin(fuente.url)}" type="${/\.webm(?:$|\?)/i.test(fuente.url) ? "video/webm" : "video/mp4"}">Tu navegador no admite la reproducción de este video.</video>`;
     } else {
         contenedor.innerHTML = `<iframe class="video-player-frame" src="${fuente.embed}" title="${escaparHtmlAdmin(video.titulo)}" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`;
     }
@@ -4749,7 +4784,7 @@ window.addEventListener(
         document.getElementById("public-anio").value = String(revista.anio);
         document.getElementById("admin-mes-edicion").value = String(revista.mes);
         document.getElementById("admin-anio-edicion").value = String(revista.anio);
-        await Promise.all([cargarEventosSupabase(),cargarAparienciaGlobal()]);
+        await Promise.all([cargarEventosSupabase(),cargarAparienciaGlobal(),cargarVideosSupabase()]);
 
         configurarRevista();
 
@@ -4875,28 +4910,103 @@ function aplicarEdicionRevista(mes,anio){
   const diaSemana=new Date(revista.anio,revista.mes-1,1).getDay();primerDia=diaSemana===0?6:diaSemana-1;
   if(revista.editorial&&revista.editorial.titulo)revista.editorial.titulo=revista.editorial.titulo.replace(/en [A-Za-zÁÉÍÓÚáéíóú]+$/,"en "+revista.nombreMes);
 }
-async function cambiarEdicionPublica(){const mes=Number(document.getElementById("public-mes").value);const anio=Number(document.getElementById("public-anio").value);if(!Number.isInteger(anio)||anio<2020||anio>2100){alert("Escribe un año válido entre 2020 y 2100.");return;}aplicarEdicionRevista(mes,anio);document.getElementById("admin-mes-edicion").value=String(mes);document.getElementById("admin-anio-edicion").value=String(anio);document.getElementById("public-mes").value=String(mes);document.getElementById("public-anio").value=String(anio);await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();}
+async function cambiarEdicionPublica(){const mes=Number(document.getElementById("public-mes").value);const anio=Number(document.getElementById("public-anio").value);if(!Number.isInteger(anio)||anio<2020||anio>2100){alert("Escribe un año válido entre 2020 y 2100.");return;}aplicarEdicionRevista(mes,anio);document.getElementById("admin-mes-edicion").value=String(mes);document.getElementById("admin-anio-edicion").value=String(anio);document.getElementById("public-mes").value=String(mes);document.getElementById("public-anio").value=String(anio);await Promise.all([cargarEventosSupabase(),cargarVideosSupabase()]);configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();}
 async function cambiarEdicionAdmin(){
   const mes=Number(document.getElementById("admin-mes-edicion").value);
   const anio=Number(document.getElementById("admin-anio-edicion").value);
   if(!Number.isInteger(anio)||anio<2020||anio>2100){alert("Escribe un año válido entre 2020 y 2100.");return;}
   aplicarEdicionRevista(mes,anio);
-  await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();
-  await listarEventosAdmin();mostrarEstadoAdmin("Mostrando la edición "+revista.nombreMes+" "+revista.anio+".");
+  await Promise.all([cargarEventosSupabase(),cargarVideosSupabase()]);configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();
+  await Promise.all([listarEventosAdmin(),listarVideosAdmin()]);mostrarEstadoAdmin("Mostrando la edición "+revista.nombreMes+" "+revista.anio+".");
 }
-async function comprobarSesionAdmin(){const {data:{session}}=await supabaseClient.auth.getSession();const ok=!!session&&session.user.id===ADMIN_USER_ID;document.getElementById("admin-login").hidden=ok;document.getElementById("admin-workspace").hidden=!ok;if(session&&!ok){await supabaseClient.auth.signOut();mostrarEstadoAdmin("Esta cuenta no tiene permisos de administración.",true);}if(ok){await cargarAparienciaGlobal();document.getElementById("admin-mes-edicion").value=String(revista.mes);document.getElementById("admin-anio-edicion").value=String(revista.anio);document.getElementById("public-mes").value=String(revista.mes);document.getElementById("public-anio").value=String(revista.anio);await listarEventosAdmin();}}
+async function comprobarSesionAdmin(){const {data:{session}}=await supabaseClient.auth.getSession();const ok=!!session&&session.user.id===ADMIN_USER_ID;document.getElementById("admin-login").hidden=ok;document.getElementById("admin-workspace").hidden=!ok;if(session&&!ok){await supabaseClient.auth.signOut();mostrarEstadoAdmin("Esta cuenta no tiene permisos de administración.",true);}if(ok){await cargarAparienciaGlobal();document.getElementById("admin-mes-edicion").value=String(revista.mes);document.getElementById("admin-anio-edicion").value=String(revista.anio);document.getElementById("public-mes").value=String(revista.mes);document.getElementById("public-anio").value=String(revista.anio);await Promise.all([listarEventosAdmin(),listarVideosAdmin()]);}}
 async function iniciarSesionAdmin(){const email=document.getElementById("admin-email").value.trim();const password=document.getElementById("admin-password").value;if(!email||!password){alert("Escribe tu correo y contraseña.");return;}const {data,error}=await supabaseClient.auth.signInWithPassword({email,password});if(error){alert("No fue posible iniciar sesión. Verifica el correo y la contraseña.");console.error(error);return;}if(data.user.id!==ADMIN_USER_ID){await supabaseClient.auth.signOut();alert("Esta cuenta no está autorizada para administrar la revista.");return;}await comprobarSesionAdmin();}
 async function solicitarRecuperacionAdmin(){const email=document.getElementById("admin-email").value.trim();if(!email){alert("Escribe primero el correo de tu cuenta administradora.");return;}const redirectTo=window.location.origin+window.location.pathname;const {error}=await supabaseClient.auth.resetPasswordForEmail(email,{redirectTo});if(error){alert("No se pudo enviar el correo de recuperación. Intenta nuevamente.");console.error(error);return;}alert("Si el correo está registrado, recibirás instrucciones para recuperar tu contraseña.");}
 async function cerrarSesionAdmin(){await supabaseClient.auth.signOut();document.getElementById("admin-workspace").hidden=true;document.getElementById("admin-login").hidden=false;}
 function limpiarFormularioAdmin(){eventoEditandoId=null;imagenActualUrl="";["admin-fecha","admin-titulo-evento","admin-descripcion","admin-persona","admin-cargo","admin-imagen"].forEach(id=>document.getElementById(id).value="");document.getElementById("admin-categoria").value="conmemoracion";document.querySelector('#admin-workspace .admin-primary').textContent="Guardar publicación";}
 async function listarEventosAdmin(){const {data,error}=await supabaseClient.from("eventos").select("id,fecha,titulo,categoria,descripcion,imagen_url,persona,cargo").eq("mes",revista.mes).eq("anio",revista.anio).order("fecha",{ascending:true});const c=document.getElementById("admin-event-list");if(error){c.textContent="No se pudieron consultar las publicaciones. Revisa los permisos de la tabla eventos.";console.error(error);return;}if(!data.length){c.textContent="Aún no hay publicaciones guardadas para esta edición.";window.eventosAdminCache=[];return;}window.eventosAdminCache=data;c.innerHTML=data.map(f=>'<div class="admin-event-row"><div><strong>'+escaparHtmlAdmin(f.titulo||"Sin título")+'</strong><small>'+escaparHtmlAdmin(f.fecha||"")+' · '+escaparHtmlAdmin(f.categoria||"")+'</small></div><div class="admin-row-actions"><button class="admin-secondary" type="button" data-admin-action="edit" data-event-id="'+escaparHtmlAdmin(f.id)+'">Editar</button><button class="admin-danger" type="button" data-admin-action="delete" data-event-id="'+escaparHtmlAdmin(f.id)+'">Eliminar</button></div></div>').join("");if(!c.dataset.actionsBound){c.addEventListener("click",async function(e){const b=e.target.closest("button[data-admin-action]");if(!b)return;const id=b.dataset.eventId;if(b.dataset.adminAction==="edit"){editarEventoAdmin(id);}else if(b.dataset.adminAction==="delete"){await eliminarEventoAdmin(id);}});c.dataset.actionsBound="1";}}
+
+function urlPublicaValida(valor, permitirVacio=false) {
+  const raw=String(valor||"").trim();
+  if(!raw) return permitirVacio ? "" : null;
+  try { const u=new URL(raw); return (u.protocol==="https:"||u.protocol==="http:") ? u.href : null; }
+  catch(_) { return null; }
+}
+function limpiarFormularioVideoAdmin() {
+  videoEditandoId=null;
+  ["admin-video-titulo","admin-video-descripcion","admin-video-url","admin-video-portada"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("admin-video-orden").value="0";
+  document.getElementById("admin-video-save").textContent="Guardar video";
+}
+async function listarVideosAdmin() {
+  const c=document.getElementById("admin-video-list");
+  if(!c) return;
+  const {data,error}=await supabaseClient.from("videos_revista")
+    .select("id,mes,anio,titulo,descripcion,url,portada_url,orden")
+    .eq("mes",String(revista.mes)).eq("anio",revista.anio)
+    .order("orden",{ascending:true}).order("created_at",{ascending:true});
+  if(error){c.textContent="No se pudieron consultar los videos. Verifica que exista la tabla videos_revista y sus permisos.";console.error(error);return;}
+  videosAdminCache=Array.isArray(data)?data:[];
+  if(!videosAdminCache.length){c.textContent="Aún no hay videos registrados para esta edición.";return;}
+  c.innerHTML=videosAdminCache.map(v=>`<div class="admin-event-row"><div><strong>${escaparHtmlAdmin(v.titulo||"Sin título")}</strong><small>Orden ${Number(v.orden)||0} · ${escaparHtmlAdmin(v.url||"")}</small></div><div class="admin-row-actions"><button class="admin-secondary" type="button" data-video-action="edit" data-video-id="${escaparHtmlAdmin(v.id)}">Editar</button><button class="admin-danger" type="button" data-video-action="delete" data-video-id="${escaparHtmlAdmin(v.id)}">Eliminar</button></div></div>`).join("");
+  if(!c.dataset.actionsBound){
+    c.addEventListener("click",async e=>{
+      const b=e.target.closest("button[data-video-action]");if(!b)return;
+      const id=b.dataset.videoId;
+      if(b.dataset.videoAction==="edit") editarVideoAdmin(id);
+      if(b.dataset.videoAction==="delete") await eliminarVideoAdmin(id);
+    });
+    c.dataset.actionsBound="1";
+  }
+}
+function editarVideoAdmin(id) {
+  const v=videosAdminCache.find(x=>String(x.id)===String(id));if(!v)return;
+  videoEditandoId=v.id;
+  document.getElementById("admin-video-titulo").value=v.titulo||"";
+  document.getElementById("admin-video-descripcion").value=v.descripcion||"";
+  document.getElementById("admin-video-url").value=v.url||"";
+  document.getElementById("admin-video-portada").value=v.portada_url||"";
+  document.getElementById("admin-video-orden").value=Number(v.orden)||0;
+  document.getElementById("admin-video-save").textContent="Actualizar video";
+  mostrarEstadoAdmin("Editando video: "+(v.titulo||"sin título"));
+  document.getElementById("admin-video-titulo").scrollIntoView({behavior:"smooth",block:"center"});
+}
+async function guardarVideoAdmin() {
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session||session.user.id!==ADMIN_USER_ID){mostrarEstadoAdmin("Tu sesión no está autorizada. Ingresa nuevamente.",true);return;}
+  const titulo=document.getElementById("admin-video-titulo").value.trim();
+  const descripcion=document.getElementById("admin-video-descripcion").value.trim();
+  const url=urlPublicaValida(document.getElementById("admin-video-url").value);
+  const portada=urlPublicaValida(document.getElementById("admin-video-portada").value,true);
+  const orden=Number(document.getElementById("admin-video-orden").value);
+  if(!titulo){alert("Escribe el título del video.");return;}
+  if(!url||!obtenerFuenteVideo(url)){alert("Pega un enlace válido de YouTube, Vimeo o un archivo MP4/WebM público.");return;}
+  if(portada===null){alert("El enlace de portada debe ser una URL HTTP o HTTPS válida.");return;}
+  if(!Number.isInteger(orden)||orden<0){alert("El orden debe ser un número entero igual o mayor que cero.");return;}
+  const registro={mes:String(revista.mes),anio:revista.anio,titulo,descripcion,url,portada_url:portada||null,orden};
+  const result=videoEditandoId
+    ? await supabaseClient.from("videos_revista").update(registro).eq("id",videoEditandoId)
+    : await supabaseClient.from("videos_revista").insert(registro);
+  if(result.error){console.error("Error guardando video:",result.error);alert("No se pudo guardar el video. Verifica la tabla videos_revista y las políticas RLS de Supabase.");return;}
+  limpiarFormularioVideoAdmin();
+  await Promise.all([cargarVideosSupabase(),listarVideosAdmin()]);
+  mostrarEstadoAdmin("Video guardado correctamente en "+revista.nombreMes+" "+revista.anio+".");
+}
+async function eliminarVideoAdmin(id) {
+  if(!confirm("¿Seguro que deseas eliminar este video de la edición?"))return;
+  const {data:{session}}=await supabaseClient.auth.getSession();
+  if(!session||session.user.id!==ADMIN_USER_ID){mostrarEstadoAdmin("Tu sesión no está autorizada.",true);return;}
+  const {error}=await supabaseClient.from("videos_revista").delete().eq("id",id);
+  if(error){console.error("Error eliminando video:",error);alert("No se pudo eliminar el video. Revisa las políticas RLS de Supabase.");return;}
+  await Promise.all([cargarVideosSupabase(),listarVideosAdmin()]);
+  mostrarEstadoAdmin("Video eliminado correctamente.");
+}
+
 function escaparHtmlAdmin(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function editarEventoAdmin(id){const f=(window.eventosAdminCache||[]).find(x=>String(x.id)===String(id));if(!f)return;eventoEditandoId=f.id;imagenActualUrl=f.imagen_url||"";document.getElementById("admin-fecha").value=f.fecha||"";document.getElementById("admin-categoria").value=f.categoria||"actividad";document.getElementById("admin-titulo-evento").value=f.titulo||"";document.getElementById("admin-descripcion").value=f.descripcion||"";document.getElementById("admin-persona").value=f.persona||"";document.getElementById("admin-cargo").value=f.cargo||"";document.getElementById("admin-imagen").value="";document.querySelector('#admin-workspace .admin-primary').textContent="Actualizar publicación";mostrarEstadoAdmin("Editando: "+(f.titulo||"publicación"));document.getElementById("admin-fecha").scrollIntoView({behavior:"smooth",block:"center"});}
 async function guardarEventoAdmin(){const fecha=document.getElementById("admin-fecha").value;const titulo=document.getElementById("admin-titulo-evento").value.trim();const categoria=document.getElementById("admin-categoria").value;const persona=document.getElementById("admin-persona").value.trim();if(!fecha||!titulo){alert("La fecha y el título son obligatorios.");return;}if(!/^\d{4}-\d{2}-\d{2}$/.test(fecha)||Number(fecha.slice(5,7))<1||Number(fecha.slice(5,7))>12){alert("Selecciona una fecha válida.");return;}if((categoria==="reconocimiento"||categoria==="cumpleanos")&&!persona){alert("Para reconocimientos y cumpleaños, escribe el nombre de la persona.");return;}const {data:{session}}=await supabaseClient.auth.getSession();if(!session||session.user.id!==ADMIN_USER_ID){alert("Tu sesión no está autorizada. Ingresa nuevamente.");return;}const archivo=document.getElementById("admin-imagen").files[0];let imagenUrl=imagenActualUrl;if(archivo){if(!archivo.type.startsWith("image/")){alert("Selecciona un archivo de imagen.");return;}if(archivo.size>8*1024*1024){alert("La imagen no puede superar los 8 MB.");return;}const ext=(archivo.name.split(".").pop()||"jpg").toLowerCase().replace(/[^a-z0-9]/g,"");const ruta=fecha.slice(0,4)+"/"+fecha.slice(5,7)+"/"+Date.now()+"-"+Math.random().toString(36).slice(2,8)+"."+ext;const {error:upError}=await supabaseClient.storage.from("revista-vita").upload(ruta,archivo,{contentType:archivo.type,upsert:false});if(upError){alert("No se pudo subir la imagen. Revisa los permisos del almacenamiento.");console.error(upError);return;}imagenUrl=supabaseClient.storage.from("revista-vita").getPublicUrl(ruta).data.publicUrl;}const registro={fecha,titulo,categoria,descripcion:document.getElementById("admin-descripcion").value.trim(),imagen_url:imagenUrl||null,mes:Number(fecha.slice(5,7)),anio:Number(fecha.slice(0,4)),persona:persona||null,cargo:document.getElementById("admin-cargo").value.trim()||null};let result;if(eventoEditandoId)result=await supabaseClient.from("eventos").update(registro).eq("id",eventoEditandoId);else result=await supabaseClient.from("eventos").insert(registro);if(result.error){alert("No se pudo guardar. Revisa los permisos y las columnas de la tabla.");console.error(result.error);return;}aplicarEdicionRevista(registro.mes,registro.anio);document.getElementById("admin-mes-edicion").value=String(registro.mes);document.getElementById("admin-anio-edicion").value=String(registro.anio);document.getElementById("public-mes").value=String(registro.mes);document.getElementById("public-anio").value=String(registro.anio);await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();limpiarFormularioAdmin();await listarEventosAdmin();mostrarEstadoAdmin("Publicación guardada correctamente.");}
 async function eliminarEventoAdmin(id){if(!confirm("¿Seguro que deseas eliminar esta publicación?"))return;const {error}=await supabaseClient.from("eventos").delete().eq("id",id);if(error){alert("No se pudo eliminar. Revisa los permisos de la tabla.");console.error(error);return;}await cargarEventosSupabase();configurarRevista();generarCalendario();generarHomenajeados();generarCumpleanos();generarGaleria();await listarEventosAdmin();mostrarEstadoAdmin("Publicación eliminada.");}
 async function guardarNuevaContrasenaAdmin(){const p=document.getElementById("admin-new-password").value;const c=document.getElementById("admin-confirm-password").value;if(p.length<8){alert("La contraseña debe tener al menos 8 caracteres.");return;}if(p!==c){alert("Las contraseñas no coinciden.");return;}const {error}=await supabaseClient.auth.updateUser({password:p});if(error){alert("No se pudo actualizar la contraseña. Intenta nuevamente.");console.error(error);return;}alert("Contraseña actualizada. Ya puedes ingresar al panel.");document.getElementById("admin-recovery").hidden=true;document.getElementById("admin-login").hidden=false;document.getElementById("admin-new-password").value="";document.getElementById("admin-confirm-password").value="";}
-generarVideosRevista();
-
 supabaseClient.auth.onAuthStateChange((event,session)=>{if(event==="PASSWORD_RECOVERY"){document.getElementById("admin-login").hidden=true;document.getElementById("admin-workspace").hidden=true;document.getElementById("admin-recovery").hidden=false;document.getElementById("admin-overlay").classList.add("visible");}if(event==="SIGNED_OUT"){const w=document.getElementById("admin-workspace");const l=document.getElementById("admin-login");const recovery=document.getElementById("admin-recovery");if(w&&l){w.hidden=true;l.hidden=false;if(recovery)recovery.hidden=true;}}});
 
 </script>
